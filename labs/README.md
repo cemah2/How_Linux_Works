@@ -25,10 +25,10 @@ tu es l’administrateur ou l’administratrice système de la **Brasserie du No
 | [06](lab06-performances/) | Le serveur qui rame | 8 | disponible |
 | [07](lab07-reseau/) | Le réseau de la brasserie | 9 | disponible |
 | [08](lab08-ssh/) | Accès distants sécurisés | 10 | disponible |
-| 09 | Scripts d’exploitation | 11, 13 | à venir |
+| [09](lab09-scripts/) | Scripts d’exploitation | 11, 13 | disponible |
 | [10](lab10-partages/) | Sauvegardes et partages | 12 | disponible |
-| 11 | Compiler et installer depuis les sources | 15, 16 | à venir |
-| 12 | Conteneurs sous le capot | 17, A4 | à venir |
+| [11](lab11-compilation/) | Compiler et installer depuis les sources | 15, 16 | disponible |
+| [12](lab12-conteneurs/) | Conteneurs sous le capot | 17, A4 | disponible |
 | 13 | Incident en production (final) | tous | à venir |
 
 ## Écrire un lab
@@ -58,5 +58,13 @@ Quelques règles apprises à la dure :
 - Les labs à plusieurs machines (07, 08, 10) ont **un correcteur par rôle** : la machine se reconnaît à son nom
   (`douane`, `cuve`, `comptoir`), qu’une variable `LABNN_ROLE` peut forcer pour les tests. La CI les rejoue sur une
   seule machine, avec des espaces de noms réseau ou des interfaces factices.
-- Les comptes partagés entre labs (bastien, malik, ines, chloe) se créent avec `assurer_compte`, qui note ce qu’il crée :
+- Les comptes partagés entre labs (bastien, malik, ines, chloe, lea) se créent avec `assurer_compte`, qui note ce qu’il crée :
   le reset d’un lab ne supprime que ce que ce lab a créé.
+- Un fichier système modifié par un lab (`/etc/skel/.bashrc`, `/etc/subuid`, le `.bashrc` d’un compte existant)
+  est sauvegardé dans `/var/lib/hlw` par `setup.sh` et restauré par `reset.sh`.
+- Pour vérifier un script de l’apprenant (Lab 09), le correcteur l’exécute **sous un compte sans privilège**, sur des
+  données jetables dans `/tmp/hlw-labNN.*`, avec un environnement minimal (`env -i`) et un `TMPDIR` surveillé.
+- Pour mesurer ce que voit un utilisateur, passer par un **shell de connexion** (`runuser -l lea -c …`) et n’extraire
+  que la partie utile (marqueurs `@@…@@`) : un message d’accueil ne doit pas fausser la mesure.
+- `systemd-run` remplace lui-même les `$VARIABLES` de ses arguments : `--expand-environment=no` pour transmettre une
+  commande intacte (Lab 12).

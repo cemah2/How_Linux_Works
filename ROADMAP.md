@@ -33,12 +33,17 @@ Livraison par blocs, chacun validé avant de passer au suivant.
 - [x] Examen blanc du bloc 3
 - [x] Tests CI des labs réseau : trois machines simulées (espaces de noms réseau, interfaces factices)
 
-## Livraison 4 : environnement et outils (chapitres 11, 13 à 17)
+## Livraison 4 : environnement et outils (chapitres 11, 13 à 17) ✅
 
-- [ ] Ch. 11 Scripts shell, ch. 13 Environnements utilisateur, ch. 14 Bureau (allégé), ch. 15 Outils de développement,
-      ch. 16 Compilation, ch. 17 Virtualisation et conteneurs
-- [ ] Labs 09 (scripts), 11 (compilation), 12 (conteneurs)
-- [ ] Examen blanc du bloc 4 et examen final (format LPIC)
+- [x] Ch. 11 Scripts shell (+ fiche 11.A scripts de production : set -euo pipefail, fonctions, getopts, shellcheck)
+- [x] Ch. 13 Environnements utilisateur, ch. 14 Bureau et impression (allégé : X11/Wayland, D-Bus, CUPS)
+- [x] Ch. 15 Outils de développement (+ 15.A inspecter un binaire : readelf, objdump, LD_DEBUG)
+- [x] Ch. 16 Compilation depuis les sources (+ 16.A CMake, Meson, DESTDIR, bascule de versions dans /opt)
+- [x] Ch. 17 Virtualisation et conteneurs (+ 17.A Podman en production : volumes, limites, Quadlet)
+- [x] Labs 09 (scripts d’exploitation), 11 (compilation, bibliothèques partagées, correctif), 12 (Podman, Quadlet,
+      mini-conteneur fait main avec unshare et systemd-run)
+- [x] Examen blanc du bloc 4 et examen final (format LPIC, 60 questions)
+- [x] Tests CI de bout en bout des labs 09, 11 et 12
 
 ## Livraison 5 : au-delà du livre
 
