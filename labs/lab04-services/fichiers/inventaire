@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# inventaire : démon (factice) d'inventaire des fûts, fourni par l'éditeur « CaveSoft ».
+echo "inventaire : démarrage (nice $(nice))"
+trap 'echo "inventaire : arrêt"; exit 0' TERM INT
+while :; do
+  sleep 120 &
+  wait $!
+  echo "inventaire : 42 fûts pleins, 17 vides"
+done

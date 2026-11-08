@@ -9,8 +9,8 @@ jobs:
     name: Données du cahier
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: '22'
       - name: Valider fiches, exercices et réponses modèles
@@ -20,7 +20,7 @@ jobs:
     name: Scripts shell
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Installer shellcheck
         run: sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
       - name: shellcheck
@@ -29,12 +29,13 @@ jobs:
           infra/bin/lab infra/proxmox/*.sh labs/lib/*.sh labs/lab*/*.sh tools/*.sh
           labs/lab01-premier-jour/fichiers/thermostat-cuve labs/lab01-premier-jour/fichiers/sauvegarde-recettes
           labs/lab03-demarrage/fichiers/brassd labs/lab03-demarrage/fichiers/collecte-capteurs
+          labs/lab04-services/fichiers/vitrine labs/lab04-services/fichiers/inventaire labs/lab04-services/fichiers/export-ventes
 
   lab01:
     name: Lab 01 de bout en bout
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Setup, correction, solution, correction, reset
         run: sudo bash tools/tester-lab01.sh
 
@@ -42,7 +43,7 @@ jobs:
     name: Lab 02 de bout en bout (disques loop)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Outils LVM et XFS
         run: sudo apt-get update -qq && sudo apt-get install -y -qq lvm2 xfsprogs
       - name: Setup, correction, solution, correction, reset
@@ -52,6 +53,14 @@ jobs:
     name: Lab 03 (partiel, sans redémarrage)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Panne, réparation, correction, reset
         run: sudo bash tools/tester-lab03.sh
+
+  lab04:
+    name: Lab 04 de bout en bout
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Setup, correction, solution, correction, reset
+        run: sudo bash tools/tester-lab04.sh

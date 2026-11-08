@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# export-ventes : exporte les ventes du jour pour la comptabilité.
+set -euo pipefail
+dest=/srv/ventes/exports
+mkdir -p "$dest"
+fichier="${dest}/ventes-$(date +%Y%m%d-%H%M%S).csv"
+{
+  echo "date;produit;quantite;montant"
+  echo "$(date +%F);IPA du Noyau 33 cl;48;187,20"
+  echo "$(date +%F);Stout du Tunnel 33 cl;24;100,80"
+} > "$fichier"
+echo "export-ventes : ${fichier} créé ($(wc -l < "$fichier") lignes)"

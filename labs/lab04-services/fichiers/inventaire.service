@@ -1,0 +1,13 @@
+# Fourni par le paquet cavesoft-inventaire. NE PAS MODIFIER : ce fichier est remplacé à chaque mise à jour.
+# Pour l'adapter : systemctl edit inventaire.service
+[Unit]
+Description=Inventaire des fûts (CaveSoft)
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/lib/hlw/inventaire
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
