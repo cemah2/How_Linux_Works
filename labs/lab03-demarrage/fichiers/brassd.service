@@ -1,0 +1,11 @@
+[Unit]
+Description=Pilotage du brassage (brassd)
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/brassd
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

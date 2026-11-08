@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# brassd : démon (factice) de pilotage du brassage de la Brasserie du Noyau.
+# Il écrit un battement de cœur dans le journal toutes les minutes.
+echo "brassd démarré (PID $$) : pilotage des cuves actif"
+trap 'echo "brassd arrêté proprement"; exit 0' TERM INT
+while :; do
+  sleep 60 &
+  wait $!
+  echo "cuves : température nominale"
+done

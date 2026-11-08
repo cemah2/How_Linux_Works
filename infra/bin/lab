@@ -7,6 +7,7 @@
 #   lab hint 01 [1|2|3]   indices de niveau 1 (piste), 2 (direction) ou 3 (presque la solution)
 #   lab reset 01          remet la machine dans l'état d'avant le lab
 #   lab solution 01       affiche la solution complète (après confirmation)
+#   lab panne 03          déclenche la panne d'un lab de dépannage (Lab 03)
 #   lab update            met à jour le dépôt (git pull)
 #
 # Les actions qui modifient le système se relancent automatiquement avec sudo.
@@ -22,7 +23,7 @@ if [[ -t 1 ]]; then G=$'\e[1m'; V=$'\e[32m'; J=$'\e[33m'; R=$'\e[31m'; Z=$'\e[0m
 
 mourir() { printf '%serreur :%s %s\n' "$R" "$Z" "$*" >&2; exit 1; }
 
-usage() { sed -n '3,12p' "$SCRIPT" | sed 's/^# \{0,1\}//'; }
+usage() { sed -n '3,13p' "$SCRIPT" | sed 's/^# \{0,1\}//'; }
 
 en_root() {
   if [[ $EUID -ne 0 ]]; then
@@ -113,6 +114,14 @@ case "$ACTION" in
     else
       echo "Ce lab n’a pas de remise à zéro automatique : restaure un instantané Proxmox."
     fi
+    ;;
+
+  panne)
+    en_root "$ACTION" "$@"
+    d="$(dossier_lab "${1:-}")"; n="$(num_lab "$d")"
+    [[ -x "$d/panne.sh" ]] || mourir "le lab ${n} n’a pas de panne à déclencher"
+    [[ -f "${ETAT_DIR}/lab${n}.demarre" ]] || mourir "lance d’abord : lab start ${n}"
+    "$d/panne.sh"
     ;;
 
   solution)

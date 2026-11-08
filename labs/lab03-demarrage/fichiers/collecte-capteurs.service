@@ -1,0 +1,11 @@
+[Unit]
+Description=Collecte des capteurs de cuve
+After=network.target
+Before=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/lib/hlw/collecte-capteurs
+
+[Install]
+WantedBy=multi-user.target

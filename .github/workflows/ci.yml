@@ -28,6 +28,7 @@ jobs:
           shellcheck -x -P SCRIPTDIR -e SC2016,SC1112
           infra/bin/lab infra/proxmox/*.sh labs/lib/*.sh labs/lab*/*.sh tools/*.sh
           labs/lab01-premier-jour/fichiers/thermostat-cuve labs/lab01-premier-jour/fichiers/sauvegarde-recettes
+          labs/lab03-demarrage/fichiers/brassd labs/lab03-demarrage/fichiers/collecte-capteurs
 
   lab01:
     name: Lab 01 de bout en bout
@@ -36,3 +37,21 @@ jobs:
       - uses: actions/checkout@v4
       - name: Setup, correction, solution, correction, reset
         run: sudo bash tools/tester-lab01.sh
+
+  lab02:
+    name: Lab 02 de bout en bout (disques loop)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Outils LVM et XFS
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq lvm2 xfsprogs
+      - name: Setup, correction, solution, correction, reset
+        run: sudo bash tools/tester-lab02.sh
+
+  lab03:
+    name: Lab 03 (partiel, sans redémarrage)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Panne, réparation, correction, reset
+        run: sudo bash tools/tester-lab03.sh

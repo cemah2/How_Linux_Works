@@ -112,3 +112,87 @@ groupe_peut_modifier() { [[ -z "$(find "$1" -type f ! -perm -g=rw -print -quit 2
 # n'importe quel shell dont la ligne de commande contient ce texte.
 processus_absent() { ! pgrep -x "$1" >/dev/null 2>&1; }
 utilisateur_existe() { id "$1" >/dev/null 2>&1; }
+
+# --- Paquets ---------------------------------------------------------------
+paquet_installe() {
+  if [[ "$FAMILLE" == "debian" ]]; then
+    dpkg-query -W -f='${Status}' "$1" 2>/dev/null | grep -q 'ok installed'
+  else
+    rpm -q "$1" >/dev/null 2>&1
+  fi
+}
+
+# installer_paquets nom… : installe ce qui manque. Préfixes « deb= » et « rh= » pour un paquet
+# propre à une famille (ex. : installer_paquets lvm2 deb=xfsprogs).
+installer_paquets() {
+  local p manquants=()
+  for p in "$@"; do
+    case "$p" in
+      deb=*) [[ "$FAMILLE" == "debian" ]] || continue; p="${p#deb=}" ;;
+      rh=*)  [[ "$FAMILLE" == "redhat" ]] || continue; p="${p#rh=}" ;;
+    esac
+    paquet_installe "$p" || manquants+=("$p")
+  done
+  (( ${#manquants[@]} )) || return 0
+  info "installation des paquets nécessaires : ${manquants[*]}"
+  if [[ "$FAMILLE" == "debian" ]]; then
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get install -y -qq "${manquants[@]}" >/dev/null 2>&1 \
+      || { apt-get update -qq >/dev/null 2>&1 && apt-get install -y -qq "${manquants[@]}" >/dev/null; }
+  else
+    dnf install -y -q "${manquants[@]}" >/dev/null
+  fi
+}
+
+# --- Comptes partagés par plusieurs labs ---------------------------------------
+# Les labs 01, 05 et 06 utilisent les mêmes personnages. Un lab ne crée un compte ou un groupe
+# que s'il manque, et note ce qu'il a créé (pour que son reset ne supprime que cela).
+assurer_groupe() { # lab groupe
+  getent group "$2" >/dev/null && return 0
+  groupadd "$2"
+  mkdir -p "$ETAT_DIR"; echo "groupe $2" >> "${ETAT_DIR}/lab$1.crees"
+}
+assurer_compte() { # lab nom "Description" groupe_secondaire…
+  local lab="$1" nom="$2" desc="$3"; shift 3
+  local g groupes=""
+  for g in "$@"; do assurer_groupe "$lab" "$g"; groupes+="${groupes:+,}$g"; done
+  if id "$nom" >/dev/null 2>&1; then
+    [[ -n "$groupes" ]] && usermod -aG "$groupes" "$nom"
+    return 0
+  fi
+  useradd -m -s /bin/bash -c "$desc" ${groupes:+-G "$groupes"} "$nom"
+  mkdir -p "$ETAT_DIR"; echo "compte $nom" >> "${ETAT_DIR}/lab${lab}.crees"
+}
+# Supprime les comptes puis les groupes créés par le lab (dans l'ordre inverse).
+supprimer_crees() { # lab
+  local f="${ETAT_DIR}/lab$1.crees" type nom
+  [[ -f "$f" ]] || return 0
+  while read -r type nom; do
+    [[ "$type" == compte ]] || continue
+    pkill -u "$nom" 2>/dev/null || true
+    userdel -r "$nom" >/dev/null 2>&1 || userdel "$nom" >/dev/null 2>&1 || true
+  done < "$f"
+  while read -r type nom; do
+    [[ "$type" == groupe ]] && { groupdel "$nom" >/dev/null 2>&1 || true; }
+  done < "$f"
+  rm -f "$f"
+}
+
+# --- systemd ---------------------------------------------------------------
+propriete() { systemctl show -p "$2" --value "$1" 2>/dev/null; }   # propriete unité Nom
+propriete_est() { [[ "$(propriete "$1" "$2")" == "$3" ]]; }
+unite_active() { systemctl is-active --quiet "$1"; }
+unite_activee() { systemctl is-enabled --quiet "$1" 2>/dev/null; }
+# Retire proprement une unité installée par un lab (et ses surcharges).
+retirer_unite() { # nom.ext…
+  local u
+  for u in "$@"; do
+    systemctl disable --now "$u" >/dev/null 2>&1 || true
+    systemctl reset-failed "$u" >/dev/null 2>&1 || true
+    rm -rf "/etc/systemd/system/$u" "/etc/systemd/system/$u.d" "/etc/systemd/system.control/$u" \
+      "/etc/systemd/system.control/$u.d" "/run/systemd/system.control/$u.d" "/usr/lib/systemd/system/$u"
+  done
+  systemctl daemon-reload
+}
+# Identifiant du démarrage en cours (change à chaque redémarrage)
+id_demarrage() { cat /proc/sys/kernel/random/boot_id; }

@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# collecte-capteurs : relève (factice) des capteurs de cuve. C'est un démon : il ne s'arrête jamais.
+echo "collecte des capteurs démarrée (PID $$)"
+trap 'echo "collecte arrêtée"; exit 0' TERM INT
+n=0
+while :; do
+  sleep 30 &
+  wait $!
+  n=$((n + 1))
+  echo "relevé ${n} : 4 cuves, 1 fermenteur"
+done
