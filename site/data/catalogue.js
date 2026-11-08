@@ -9,7 +9,7 @@ HLW.catalogue({
   depot: 'https://github.com/cemah2/How_Linux_Works',
   accroche: 'Un cahier d’exercices en français construit sur *How Linux Works* de Brian Ward (3ᵉ édition, No Starch Press, 2021). Chaque fiche suit une section du livre : un rappel, des exercices corrigés automatiquement, trois niveaux d’indices, puis des labs sur de vraies machines virtuelles.',
 
-  fichiers: ['glossaire.js', 'ch00.js', 'ch01.js', 'ch02.js', 'ch02-suite.js'],
+  fichiers: ['glossaire.js', 'glossaire-systeme.js', 'ch00.js', 'ch01.js', 'ch02.js', 'ch02-suite.js', 'ch03.js'],
 
   blocs: [
     { id: 'socle', nom: 'Mise en place', couleur: 'socle', desc: 'Ton labo, tes outils, tes premiers réflexes.', chapitres: ['00'] },
