@@ -99,3 +99,11 @@ jobs:
       - uses: actions/checkout@v5
       - name: Trois rôles sur la même machine
         run: sudo bash tools/tester-lab08.sh
+
+  lab10:
+    name: Lab 10 (NFS, Samba, SSHFS, rsync sur une seule machine)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: cuve, comptoir et douane sur la même machine
+        run: sudo bash tools/tester-lab10.sh

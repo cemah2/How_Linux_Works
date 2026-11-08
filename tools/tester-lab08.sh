@@ -44,7 +44,7 @@ usermod -aG ssh-autorises bastien
 printf 'PermitRootLogin no\nPasswordAuthentication no\nMaxAuthTries 3\nAllowGroups ssh-autorises\nListenAddress 192.168.50.10\n' \
   > /etc/ssh/sshd_config.d/50-brasserie.conf
 sshd -t
-systemctl reload ssh
+systemctl restart ssh
 systemctl disable --now outil-debug.service
 # --- Solution : comptoir (même machine, donc même compte bastien) ------------------
 H="$(getent passwd bastien | cut -d: -f6)"

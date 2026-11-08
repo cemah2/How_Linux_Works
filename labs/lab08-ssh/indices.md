@@ -22,6 +22,8 @@
 2. Crée le groupe et ajoute-y **ton compte** et bastien **avant** de recharger sshd : `groupadd`, `usermod -aG`.
    Une session déjà ouverte n’est pas affectée : garde-la jusqu’à avoir testé une nouvelle connexion.
 3. `ListenAddress 192.168.50.10`. Sur ton poste : `ProxyJump douane` dans le bloc `Host cuve` de `~/.ssh/config`.
+   Si `ss -tln` montre encore `0.0.0.0:22` après un `reload` : l’adresse d’écoute ne change qu’au **redémarrage**
+   du service (les sessions ouvertes survivent).
 4. `/etc/fail2ban/jail.d/sshd.local` : `[sshd]`, `enabled`, `backend = systemd`, `maxretry`, `findtime`,
    `bantime`, `ignoreip`. Vérifie avec `fail2ban-client get sshd bantime`.
 5. Deux possibilités : copier la clé (`ssh-copy-id`) **avant** de couper les mots de passe ; ou, en tant qu’admin
@@ -42,7 +44,7 @@
      | sudo tee /etc/ssh/sshd_config.d/50-brasserie.conf
    sudo sshd -t && sudo systemctl reload ssh
    ```
-3. Ajoute `ListenAddress 192.168.50.10` au même fichier, `sshd -t`, `systemctl reload ssh`… depuis une session
+3. Ajoute `ListenAddress 192.168.50.10` au même fichier, `sshd -t`, `systemctl restart ssh`… depuis une session
    ouverte **par douane** (`ssh -J douane admin@192.168.50.10`), sinon tu te coupes toi-même.
 4. Sur douane : `sudo apt install fail2ban`, le fichier `sshd.local` de la solution, `sudo systemctl restart fail2ban`.
 5. Sur le comptoir : `sudo -iu bastien`, `ssh-keygen -t ed25519`, `cat ~/.ssh/id_ed25519.pub` ; sur cuve, colle cette

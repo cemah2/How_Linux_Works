@@ -97,10 +97,14 @@ il reviendrait au prochain démarrage.
    ```
    $ sudo sshd -t                                  # rien = OK
    $ sudo sshd -T | grep -Ei 'permitrootlogin|passwordauthentication|maxauthtries|allowgroups|listenaddress'
-   $ sudo systemctl reload ssh
+   $ sudo systemctl restart ssh
    $ ss -tln 'sport = :22'
    LISTEN 0 128 192.168.50.10:22 0.0.0.0:*
    ```
+
+   Pour les autres réglages, `reload` suffisait ; changer l’**adresse d’écoute** demande un `restart`. Les sessions
+   ouvertes n’en souffrent pas : l’unité ssh de Debian a `KillMode=process`, systemd n’arrête que le processus
+   principal, pas les sessions en cours.
 
    Teste depuis un **nouveau** terminal : `ssh cuve` (toi), et sur le comptoir `sudo -iu bastien ssh cuve`.
 

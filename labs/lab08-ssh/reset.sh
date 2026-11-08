@@ -18,7 +18,8 @@ restaurer() {
     if tar -tzf "$ARCHIVE" "$x" >/dev/null 2>&1; then rm -rf "/${x:?}"; tar -C / -xzf "$ARCHIVE" "$x"; fi
   done
 }
-recharger_ssh() { sshd -t 2>/dev/null && { systemctl reload ssh 2>/dev/null || systemctl reload sshd 2>/dev/null || true; }; }
+# restart (et non reload) : une adresse d'écoute (ListenAddress) ne change qu'au redémarrage
+recharger_ssh() { sshd -t 2>/dev/null && { systemctl restart ssh 2>/dev/null || systemctl restart sshd 2>/dev/null || true; }; }
 
 case "$ROLE" in
   cuve)
