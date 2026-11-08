@@ -25,4 +25,32 @@ HLW.glossaire([
   { terme: 'Capacité', en: 'capability', def: 'Fraction des pouvoirs de root (CAP_NET_BIND_SERVICE, CAP_SYS_ADMIN…) attribuable séparément.', chap: 'A4' },
   { terme: 'Correspondance d’UID', en: 'UID mapping', def: 'Table (uid_map) qui relie les UID d’un espace user à ceux de l’hôte ; plages dans /etc/subuid.', chap: 'A4' },
   { terme: 'pivot_root', en: 'pivot_root', def: 'Appel système qui change la racine d’un espace de montage, utilisé par les moteurs de conteneurs.', chap: 'A4' },
+  // Module A5
+  { terme: 'RAID', en: 'Redundant Array of Independent Disks', def: 'Regroupement de disques pour la redondance ou la performance (niveaux 0, 1, 5, 6, 10) ; mdadm sous Linux.', chap: 'A5' },
+  { terme: 'Mode dégradé', en: 'degraded mode', def: 'État d’un RAID qui a perdu un disque mais sert encore les données ([U_] dans /proc/mdstat).', chap: 'A5' },
+  { terme: 'Instantané LVM', en: 'LVM snapshot', def: 'Image figée d’un volume logique à un instant, en copie sur écriture (lvcreate -s).', chap: 'A5' },
+  { terme: 'Volume fin', en: 'thin volume', def: 'Volume LVM dont l’espace est alloué au fur et à mesure dans un pool ; la taille annoncée peut dépasser l’espace réel.', chap: 'A5' },
+  { terme: 'LUKS', en: 'Linux Unified Key Setup', def: 'Format de chiffrement de disque (dm-crypt) avec plusieurs emplacements de clés ; cryptsetup.', chap: 'A5' },
+  { terme: 'crypttab', en: '/etc/crypttab', def: 'Fichier qui décrit les volumes chiffrés à ouvrir au démarrage.', chap: 'A5' },
+  // Module A6
+  { terme: 'Méthode USE', en: 'USE method', def: 'Pour chaque ressource, examiner Utilisation, Saturation et Erreurs.', chap: 'A6' },
+  { terme: 'PSI', en: 'Pressure Stall Information', def: 'Mesure du temps d’attente des tâches sur le processeur, la mémoire et les disques (/proc/pressure).', chap: 'A6' },
+  { terme: 'perf', en: 'perf', def: 'Outil de profilage du noyau Linux : compteurs, échantillonnage, piles d’appels.', chap: 'A6' },
+  { terme: 'eBPF', en: 'extended Berkeley Packet Filter', def: 'Petits programmes vérifiés exécutés dans le noyau sur des événements, pour tracer, filtrer ou sécuriser.', chap: 'A6' },
+  { terme: 'bpftrace', en: 'bpftrace', def: 'Langage de traçage d’une ligne fondé sur eBPF : sonde /filtre/ { action }.', chap: 'A6' },
+  { terme: 'Point de trace', en: 'tracepoint', def: 'Point d’observation stable prévu dans le noyau, utilisable par perf et eBPF.', chap: 'A6' },
+  // Module A7
+  { terme: 'Ansible', en: 'Ansible', def: 'Outil d’automatisation sans agent : inventaire, modules idempotents, playbooks YAML, via SSH.', chap: 'A7' },
+  { terme: 'Inventaire', en: 'inventory', def: 'Liste des machines gérées par Ansible, rangées en groupes.', chap: 'A7' },
+  { terme: 'Playbook', en: 'playbook', def: 'Fichier YAML décrivant, pour des groupes de machines, les tâches qui mènent à l’état voulu.', chap: 'A7' },
+  { terme: 'Idempotence', en: 'idempotence', def: 'Propriété d’une opération qui, relancée, ne change plus rien une fois l’état voulu atteint.', chap: 'A7' },
+  { terme: 'Rôle Ansible', en: 'role', def: 'Ensemble réutilisable de tâches, gestionnaires, modèles et variables autour d’un même sujet.', chap: 'A7' },
+  { terme: 'Ansible Vault', en: 'Ansible Vault', def: 'Chiffrement des fichiers et valeurs secrètes d’un projet Ansible.', chap: 'A7' },
+  // Module A8
+  { terme: 'Durcissement', en: 'hardening', def: 'Réduction de la surface d’attaque : services, ports, comptes, droits et paramètres minimaux.', chap: 'A8' },
+  { terme: 'auditd', en: 'Linux audit daemon', def: 'Démon qui enregistre des événements de sécurité choisis (accès à un fichier, appels système).', chap: 'A8' },
+  { terme: 'RPO / RTO', en: 'recovery point / time objective', def: 'Quantité de données qu’on accepte de perdre / durée d’interruption acceptable.', chap: 'A8' },
+  { terme: 'Règle 3-2-1', en: '3-2-1 backup rule', def: 'Trois copies des données, sur deux supports différents, dont une hors site.', chap: 'A8' },
+  { terme: 'Rapport d’incident', en: 'postmortem', def: 'Analyse sans recherche de coupable : chronologie, causes, actions correctives et préventives.', chap: 'A8' },
+  { terme: 'Runbook', en: 'runbook', def: 'Procédure écrite pas à pas pour traiter une situation d’exploitation connue.', chap: 'A8' },
 ]);
