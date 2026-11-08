@@ -39,4 +39,27 @@ HLW.glossaire([
   { terme: 'Device mapper', en: 'device mapper', def: 'Mécanisme du noyau qui crée des périphériques bloc virtuels (`/dev/dm-N`) : LVM, chiffrement, multipath.', chap: '04' },
   { terme: 'Inode', en: 'inode', def: 'Structure qui décrit un fichier (droits, propriétaire, taille, dates, blocs), sans son nom.', chap: '04' },
   { terme: 'Compteur de liens', en: 'link count', def: 'Nombre de noms (entrées de répertoire) qui désignent un inode.', chap: '04' },
+  // Chapitre 5
+  { terme: 'Micrologiciel', en: 'firmware (BIOS, UEFI)', def: 'Programme de la carte mère qui initialise le matériel et lance le chargeur de démarrage.', chap: '05' },
+  { terme: 'Chargeur de démarrage', en: 'boot loader', def: 'Programme qui charge le noyau et l’initramfs en mémoire et leur passe des paramètres (GRUB).', chap: '05' },
+  { terme: 'GRUB', en: 'GRand Unified Bootloader', def: 'Chargeur de démarrage standard de Linux ; configuration générée dans grub.cfg.', chap: '05' },
+  { terme: 'Paramètres du noyau', en: 'kernel parameters, command line', def: 'Options passées au noyau au démarrage, visibles dans `/proc/cmdline`.', chap: '05' },
+  { terme: 'UEFI', en: 'Unified Extensible Firmware Interface', def: 'Micrologiciel moderne qui lance des programmes `.efi` depuis une partition FAT (ESP).', chap: '05' },
+  { terme: 'Partition système EFI', en: 'EFI System Partition, ESP', def: 'Partition FAT montée sur `/boot/efi`, qui contient les chargeurs UEFI.', chap: '05' },
+  { terme: 'Secure Boot', en: 'Secure Boot', def: 'Mécanisme UEFI qui n’exécute que des programmes signés ; les distributions passent par shim.', chap: '05' },
+  { terme: 'shim', en: 'shim', def: 'Petit chargeur UEFI signé par Microsoft, qui vérifie GRUB et le noyau signés par la distribution.', chap: '05' },
+  { terme: 'Chaînage', en: 'chainloading', def: 'Le chargeur passe la main à un autre chargeur (par exemple celui de Windows).', chap: '05' },
+
+  // Chapitre 6
+  { terme: 'init', en: 'init', def: 'Premier processus de l’espace utilisateur (PID 1), qui démarre et surveille les services.', chap: '06' },
+  { terme: 'systemd', en: 'systemd', def: 'Implémentation d’init actuelle : unités, dépendances, démarrage parallèle et à la demande.', chap: '06' },
+  { terme: 'Unité', en: 'unit', def: 'Objet géré par systemd, typé par son suffixe : .service, .target, .socket, .mount, .timer…', chap: '06' },
+  { terme: 'Cible', en: 'target', def: 'Unité qui regroupe d’autres unités et marque une étape du démarrage (multi-user.target).', chap: '06' },
+  { terme: 'Fichier d’unité', en: 'unit file', def: 'Fichier de configuration d’une unité, en sections [Unit], [Service], [Install].', chap: '06' },
+  { terme: 'Surcharge', en: 'drop-in', def: 'Fichier partiel dans `unité.d/` qui modifie une unité sans la recopier (`systemctl edit`).', chap: '06' },
+  { terme: 'Unité modèle', en: 'template unit', def: 'Unité dont le nom contient @ et qui sert de modèle à des instances (`getty@ttyS0.service`).', chap: '06' },
+  { terme: 'Activation par socket', en: 'socket activation', def: 'systemd écoute sur une socket et ne lance le service qu’à la première connexion.', chap: '06' },
+  { terme: 'Niveau d’exécution', en: 'runlevel', def: 'État du système dans System V init (0 à 6), remplacé par les cibles systemd.', chap: '06' },
+  { terme: 'initramfs', en: 'initial RAM filesystem', def: 'Archive chargée en mémoire avec le noyau, qui contient de quoi monter la vraie racine.', chap: '06' },
+  { terme: 'Mode secours', en: 'rescue mode, single-user mode', def: 'Démarrage minimal pour la maintenance (`rescue.target`, `emergency.target`).', chap: '06' },
 ]);
