@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 # synchro-perso : script « perso » de Kevin, qui copie des fichiers on ne sait où. Il tourne sous son compte.
 trap 'exit 0' TERM INT
 while :; do

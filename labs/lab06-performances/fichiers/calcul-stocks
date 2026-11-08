@@ -1,0 +1,5 @@
+#!/bin/bash
+# calcul-stocks : recalcul (très) long des stocks de Malik. Occupe un cœur à 100 %.
+# Il s'arrête de lui-même après trois heures.
+fin=$((SECONDS + 10800))
+while (( SECONDS < fin )); do :; done

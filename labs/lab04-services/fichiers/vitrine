@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 # vitrine : site de la boutique en ligne de la Brasserie du Noyau (serveur HTTP minimal).
 # Configuration par variables d'environnement : PORT (obligatoire), ADRESSE (127.0.0.1 par défaut).
 if [[ $EUID -eq 0 ]]; then

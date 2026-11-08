@@ -1,0 +1,42 @@
+#!/usr/bin/python3
+"""catalogue-cache : cache mémoire du catalogue de la boutique.
+
+Il remplit jusqu'à 400 Mo de mémoire, sauf si son cgroup impose une limite (memory.max) :
+il se contente alors de 80 % de cette limite. Il relit la limite toutes les 10 secondes.
+"""
+import os
+import time
+
+PAGE = 4096
+BLOC = 10 * 1024 * 1024
+CIBLE_PAR_DEFAUT = 400 * 1024 * 1024
+
+
+def limite():
+    try:
+        with open('/proc/self/cgroup') as f:
+            chemin = f.read().strip().split('::', 1)[1]
+        with open('/sys/fs/cgroup' + chemin + '/memory.max') as f:
+            v = f.read().strip()
+        return None if v == 'max' else int(v)
+    except (OSError, IndexError, ValueError):
+        return None
+
+
+blocs = []
+derniere = 'jamais'
+while True:
+    lim = limite()
+    cible = CIBLE_PAR_DEFAUT if lim is None else int(lim * 0.8)
+    while (len(blocs) + 1) * BLOC <= cible:
+        b = bytearray(BLOC)
+        for i in range(0, BLOC, PAGE):
+            b[i] = 1
+        blocs.append(b)
+    while blocs and len(blocs) * BLOC > cible:
+        blocs.pop()
+    etat = f'{len(blocs) * 10} Mo en cache (limite : {"aucune" if lim is None else str(lim // 1048576) + " Mo"})'
+    if etat != derniere:
+        print('catalogue-cache :', etat, flush=True)
+        derniere = etat
+    time.sleep(10)

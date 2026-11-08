@@ -1,0 +1,12 @@
+#!/bin/bash
+# sauvegarde-nuit : la « sauvegarde » de Bastien, qui écrit sans arrêt sur le disque.
+# Elle s'arrête d'elle-même après deux heures.
+img=/var/tmp/sauvegarde-nuit.img
+fin=$((SECONDS + 7200))
+trap 'rm -f "$img"; exit 0' TERM INT
+while (( SECONDS < fin )); do
+  dd if=/dev/zero of="$img" bs=1M count=48 conv=fdatasync status=none
+  rm -f "$img"
+  sleep 1
+done
+rm -f "$img"

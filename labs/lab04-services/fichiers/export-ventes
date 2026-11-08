@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 # export-ventes : exporte les ventes du jour pour la comptabilité.
 set -euo pipefail
 dest=/srv/ventes/exports

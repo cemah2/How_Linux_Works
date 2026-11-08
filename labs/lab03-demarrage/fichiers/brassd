@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 # brassd : démon (factice) de pilotage du brassage de la Brasserie du Noyau.
 # Il écrit un battement de cœur dans le journal toutes les minutes.
 echo "brassd démarré (PID $$) : pilotage des cuves actif"

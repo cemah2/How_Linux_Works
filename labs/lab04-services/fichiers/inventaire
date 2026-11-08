@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 # inventaire : démon (factice) d'inventaire des fûts, fourni par l'éditeur « CaveSoft ».
 echo "inventaire : démarrage (nice $(nice))"
 trap 'echo "inventaire : arrêt"; exit 0' TERM INT

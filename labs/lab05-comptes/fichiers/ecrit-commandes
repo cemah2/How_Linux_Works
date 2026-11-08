@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 # ecrit-commandes : la boutique journalise ses commandes dans un fichier qu'elle garde ouvert.
 # Elle ne sait pas rouvrir son journal : si on le renomme, elle continue d'écrire dans l'ancien.
 exec >>/var/log/boutique/commandes.log 2>&1

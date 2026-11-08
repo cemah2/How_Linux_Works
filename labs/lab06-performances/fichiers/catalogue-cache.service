@@ -1,0 +1,12 @@
+[Unit]
+Description=Cache mémoire du catalogue de la boutique
+
+[Service]
+Type=simple
+DynamicUser=yes
+ExecStart=/usr/local/lib/hlw/catalogue-cache
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

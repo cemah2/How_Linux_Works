@@ -1,0 +1,10 @@
+[Unit]
+Description=Journal brut des capteurs de cuve
+
+[Service]
+Type=simple
+ExecStart=/usr/local/lib/hlw/journal-capteurs
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

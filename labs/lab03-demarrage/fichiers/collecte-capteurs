@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 # collecte-capteurs : relève (factice) des capteurs de cuve. C'est un démon : il ne s'arrête jamais.
 echo "collecte des capteurs démarrée (PID $$)"
 trap 'echo "collecte arrêtée"; exit 0' TERM INT
