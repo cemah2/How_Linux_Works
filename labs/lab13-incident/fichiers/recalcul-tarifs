@@ -1,0 +1,7 @@
+#!/bin/bash
+# recalcul-tarifs : recalcule les tarifs de la boutique (version « provisoire » de Malik).
+# Prévu pour durer une minute… mais la boucle ne s'arrête qu'au bout de 50 minutes.
+fin=$((SECONDS + 3000))
+while (( SECONDS < fin )); do
+  :
+done

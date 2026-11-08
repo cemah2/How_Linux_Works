@@ -34,6 +34,7 @@ jobs:
           labs/lab06-performances/fichiers/calcul-stocks labs/lab06-performances/fichiers/sauvegarde-nuit
           labs/lab06-performances/fichiers/journal-capteurs
           labs/lab09-scripts/fichiers/etat-cuves labs/lab11-compilation/fichiers/jaugeur-2.1/configure
+          labs/lab13-incident/fichiers/recalcul-tarifs
 
   lab01:
     name: Lab 01 de bout en bout
@@ -134,3 +135,11 @@ jobs:
         run: podman --version && unshare --version && systemctl --version | head -1
       - name: Setup, correction, solution, correction, reset
         run: sudo bash tools/tester-lab12.sh
+
+  lab13:
+    name: Lab 13 de bout en bout (incident en production)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Setup, correction, résolution de l'incident, rapport, correction, reset
+        run: sudo bash tools/tester-lab13.sh
