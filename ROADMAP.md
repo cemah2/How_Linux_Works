@@ -45,11 +45,18 @@ Livraison par blocs, chacun validé avant de passer au suivant.
 - [x] Examen blanc du bloc 4 et examen final (format LPIC, 60 questions)
 - [x] Tests CI de bout en bout des labs 09, 11 et 12
 
-## Livraison 5 : au-delà du livre
+## Livraison 5 : au-delà du livre ✅
 
-- [ ] A1 Paquets (apt, dnf, Flatpak) · A2 nftables et firewalld · A3 SELinux et AppArmor · A4 Namespaces
-- [ ] A5 Stockage avancé (RAID, LVM, LUKS) · A6 perf, eBPF · A7 Ansible · A8 Exploitation en production
-- [ ] Lab 13 : incident en production
+- [x] A1 Paquets (apt/dpkg, dnf/rpm, dépôts deb822 et .repo, historique, Flatpak)
+- [x] A2 nftables et firewalld (règles, NAT, zones, modifier à distance sans se couper l’accès)
+- [x] A3 SELinux et AppArmor (modes, contextes, booléens, ports, diagnostic des refus)
+- [x] A4 Espaces de noms et cgroups à la main (unshare, nsenter, ip netns, chroot, capacités)
+- [x] A5 Stockage avancé (mdadm, LVM avancé, LUKS, piles de stockage)
+- [x] A6 Observabilité (méthode USE, PSI, perf, BCC, bpftrace)
+- [x] A7 Ansible (inventaire, playbooks, modèles, rôles, Vault)
+- [x] A8 Exploitation (durcissement, services systemd confinés, sauvegardes, supervision, incidents)
+- [x] Examen blanc « au-delà du livre » (30 questions)
+- [x] Lab 13 : incident en production, avec rapport d’incident vérifié automatiquement, et son test CI
 
 ## Idées pour plus tard
 

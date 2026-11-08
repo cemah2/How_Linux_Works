@@ -96,8 +96,8 @@ HLW.catalogue({
       resume: 'Ticket #1104 : installer une bibliothèque maison dans /opt et la déclarer au chargeur (ld.so.conf.d), trouver le paquet d’en-têtes manquant, appliquer un correctif de sécurité (-p1), configurer avec pkg-config, lire config.log, et démasquer un LD_LIBRARY_PATH global qui charge une vieille version.' },
     { id: 'lab12', titre: 'Conteneurs sous le capot', chapitres: ['17', 'A4'], duree: '2 h à 2 h 30', vms: ['fut'], statut: 'disponible', chemin: 'labs/lab12-conteneurs',
       resume: 'Ticket #1207 : une image à la base figée et légère, un service Quadlet (port, volume :Z sous SELinux, 128 Mo, redémarrage), Podman rootless pour Léa, la vitrine vue depuis l’hôte (PID, espaces de noms, memory.max), et un mini-conteneur fait main avec unshare et systemd-run.' },
-    { id: 'lab13', titre: 'Incident en production', chapitres: ['04', '06', '07', '08', '09', '10'], duree: '3 h', vms: ['toutes'], statut: 'a-venir', chemin: 'labs/lab13-incident',
-      resume: 'Lab final : la boutique en ligne est tombée un vendredi soir. Plusieurs pannes enchaînées, un rapport d’incident à rédiger.' },
+    { id: 'lab13', titre: 'Incident en production', chapitres: ['04', '06', '07', '08', '09', '10', 'A8'], duree: '2 h 30 à 3 h', vms: ['cuve'], statut: 'disponible', chemin: 'labs/lab13-incident',
+      resume: 'Ticket #1313, vendredi 21 h 47 : la boutique ne prend plus de commandes. Volume plein (et un fichier supprimé encore ouvert), réglage de débogage oublié, service de stock en échec, résolution de nom faussée, tâche cron qui sature le processeur, journal en mémoire. Rétablir, corriger à la racine, prévenir, puis rédiger le rapport d’incident.' },
   ],
 
   examens: [

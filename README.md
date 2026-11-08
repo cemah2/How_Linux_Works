@@ -52,7 +52,8 @@ Puis, dans une VM : `lab list`, `lab start 01`, `lab check 01`, `lab hint 01 2`.
 | Labs 07, 08 et 10 | routeur/NAT/pare-feu, SSH durci, partages et sauvegardes | ✅ |
 | Chapitres 11, 13 à 17 : environnement et outils | 33 fiches (dont 4 hors livre), 166 exercices, examen blanc du bloc 4, examen final | ✅ |
 | Labs 09, 11 et 12 | scripts d’exploitation, compilation depuis les sources, conteneurs sous le capot | ✅ |
-| Modules A1 à A8, Lab 13 | | voir [ROADMAP.md](ROADMAP.md) |
+| Modules A1 à A8 : au-delà du livre | 37 fiches, 179 exercices, examen blanc du bloc « production » | ✅ |
+| Lab 13 (final) | incident en production : six pannes enchaînées et un rapport d’incident | ✅ |
 
 ## Organisation du dépôt
 

@@ -29,7 +29,7 @@ tu es l’administrateur ou l’administratrice système de la **Brasserie du No
 | [10](lab10-partages/) | Sauvegardes et partages | 12 | disponible |
 | [11](lab11-compilation/) | Compiler et installer depuis les sources | 15, 16 | disponible |
 | [12](lab12-conteneurs/) | Conteneurs sous le capot | 17, A4 | disponible |
-| 13 | Incident en production (final) | tous | à venir |
+| [13](lab13-incident/) | Incident en production (final) | 4 à 10, A8 | disponible |
 
 ## Écrire un lab
 
@@ -68,3 +68,6 @@ Quelques règles apprises à la dure :
   que la partie utile (marqueurs `@@…@@`) : un message d’accueil ne doit pas fausser la mesure.
 - `systemd-run` remplace lui-même les `$VARIABLES` de ses arguments : `--expand-environment=no` pour transmettre une
   commande intacte (Lab 12).
+- Un correcteur qui lit un texte rédigé (rapport du Lab 13) force `LC_ALL=C.UTF-8` et écrit ses motifs accentués en
+  alternatives (`(é|e)`) : sous `sudo`, la locale peut être `C`.
+- Un volume monté appartient à root : penser à donner sa racine au compte du service (`chown` après le montage).
