@@ -151,6 +151,9 @@ FIN
 ip netns exec cuve ip address add 192.168.50.10/24 dev e-cuve
 printf 'nameserver 192.168.50.1\nsearch brasserie.lan\n' > /etc/netns/cuve/resolv.conf
 sleep 2
+# Diagnostic (utile si la CI échoue)
+dig +time=5 +tries=2 @192.168.50.1 deb.debian.org A | grep -E 'status|IN' || true
+journalctl -u dnsmasq -n 15 --no-pager || true
 # ---------------------------------------------------------------------------
 
 echo "=== douane ===";   LAB07_ROLE=douane "$LAB" check 07

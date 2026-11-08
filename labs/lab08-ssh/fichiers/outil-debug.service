@@ -1,0 +1,11 @@
+# Installé par le prestataire « DevBrass » pendant la mise en service de la boutique. « Temporaire. »
+[Unit]
+Description=Outil de diagnostic DevBrass
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 -m http.server 31337 --bind 0.0.0.0 --directory /
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

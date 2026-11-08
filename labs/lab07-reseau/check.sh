@@ -17,6 +17,8 @@ WAN="$(iface_wan)"
 # Interroge un serveur DNS précis ; affiche les réponses (adresses) seulement
 dns() { dig +short +time=2 +tries=1 "@$1" "$2" A 2>/dev/null | grep -E '^[0-9]+(\.[0-9]+){3}$'; }
 dns_donne() { [[ "$(dns "$1" "$2" | head -1)" == "$3" ]]; }
+# Nom extérieur : la première résolution traverse dnsmasq puis les serveurs de douane (plus lent)
+dns_externe() { dig +short +time=5 +tries=3 "@$1" "$2" A 2>/dev/null | grep -qE '^[0-9]+(\.[0-9]+){3}$'; }
 resout_en() { [[ "$(getent ahostsv4 "$1" 2>/dev/null | awk 'NR == 1 {print $1}')" == "$2" ]]; }
 resout() { getent ahostsv4 "$1" >/dev/null 2>&1; }
 regles() { nft list ruleset 2>/dev/null; }
@@ -61,7 +63,7 @@ douane)
   exiger "douane.${DOMAINE} ne donne pas ${IP_DOUANE_LAN} (dig @${IP_DOUANE_LAN} douane.${DOMAINE})" dns_donne "$IP_DOUANE_LAN" "douane.${DOMAINE}" "$IP_DOUANE_LAN"
   exiger "cuve.${DOMAINE} ne donne pas ${IP_CUVE_LAN}" dns_donne "$IP_DOUANE_LAN" "cuve.${DOMAINE}" "$IP_CUVE_LAN"
   exiger "comptoir.${DOMAINE} ne donne pas ${IP_COMPTOIR_LAN}" dns_donne "$IP_DOUANE_LAN" "comptoir.${DOMAINE}" "$IP_COMPTOIR_LAN"
-  exiger "les noms extérieurs (deb.debian.org) ne sont pas relayés" test -n "$(dns "$IP_DOUANE_LAN" deb.debian.org)"
+  exiger "les noms extérieurs (deb.debian.org) ne sont pas relayés (dig @${IP_DOUANE_LAN} deb.debian.org ; journalctl -u dnsmasq)" dns_externe "$IP_DOUANE_LAN" deb.debian.org
   wan_ip="$(adresse_de "${WAN:-lo}")"; wan_ip="${wan_ip%/*}"
   refuser "dnsmasq répond aussi sur l’interface EXTERNE (${wan_ip}) : limite-le à l’interface interne (interface=, bind-interfaces)" \
     dns_donne "${wan_ip:-127.0.0.2}" "cuve.${DOMAINE}" "$IP_CUVE_LAN"
