@@ -1,0 +1,29 @@
+#cloud-config
+# Données « vendor » cloud-init pour les VM Debian du labo How Linux Works.
+# Les marqueurs @…@ sont remplacés par deployer.sh à partir de lab.conf.
+timezone: @FUSEAU@
+package_update: true
+packages:
+  - qemu-guest-agent
+  - git
+  - vim
+  - man-db
+  - manpages
+  - bash-completion
+  - acl
+  - less
+  - curl
+  - tar
+  - gzip
+  - bzip2
+  - xz-utils
+  - plocate
+  - strace
+  - lsof
+  - tree
+runcmd:
+  - [systemctl, enable, --now, qemu-guest-agent]
+  - [git, clone, --depth, "1", --branch, "@BRANCHE@", "@DEPOT@", /opt/how-linux-works]
+  - [ln, -sf, /opt/how-linux-works/infra/bin/lab, /usr/local/bin/lab]
+  - [mandb, -q]
+final_message: "Labo How Linux Works : VM prête après $UPTIME s. Connecte-toi et tape « lab list »."

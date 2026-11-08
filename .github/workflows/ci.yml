@@ -1,0 +1,38 @@
+name: Vérifications
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  donnees:
+    name: Données du cahier
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Valider fiches, exercices et réponses modèles
+        run: node tools/validate.mjs
+
+  scripts:
+    name: Scripts shell
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Installer shellcheck
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
+      - name: shellcheck
+        run: >
+          shellcheck -x -P SCRIPTDIR -e SC2016,SC1112
+          infra/bin/lab infra/proxmox/*.sh labs/lib/*.sh labs/lab*/*.sh tools/*.sh
+          labs/lab01-premier-jour/fichiers/thermostat-cuve labs/lab01-premier-jour/fichiers/sauvegarde-recettes
+
+  lab01:
+    name: Lab 01 de bout en bout
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup, correction, solution, correction, reset
+        run: sudo bash tools/tester-lab01.sh

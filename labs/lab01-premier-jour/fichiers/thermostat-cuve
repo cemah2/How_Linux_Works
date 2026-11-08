@@ -1,0 +1,8 @@
+#!/bin/bash
+# Simulateur du thermostat de la cuve n° 3, oublié en marche par Bastien (lab 01).
+# Il écrit une mesure par seconde dans le partage : le fichier grossit sans fin.
+JOURNAL=/srv/brasserie/vrac/thermostat.log
+while true; do
+  echo "$(date '+%F %T') cuve 3 : 19.$((RANDOM % 10)) °C" >> "$JOURNAL" 2>/dev/null
+  sleep 1
+done

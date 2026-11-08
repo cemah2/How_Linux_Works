@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="clair">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How Linux Works : cahier pratique</title>
+  <meta name="description" content="Cahier pratique interactif en français pour le livre How Linux Works de Brian Ward : fiches, exercices corrigés, indices progressifs, labs Proxmox.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect y='22' width='32' height='8' rx='1' fill='%23B7791F'/%3E%3Crect y='12' width='32' height='8' rx='1' fill='%232D5BBF'/%3E%3Crect y='2' width='32' height='8' rx='1' fill='%230F7F73'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <a class="saut" href="#contenu">Aller au contenu</a>
+  <header class="barre-haut">
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="nav">Menu</button>
+    <a class="marque" href="#/">
+      <span class="marque-pile" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="marque-texte">How Linux Works <span>cahier pratique</span></span>
+    </a>
+    <form class="recherche" role="search">
+      <input type="search" placeholder="Rechercher une notion, une commande…" aria-label="Rechercher dans le cahier">
+    </form>
+    <button type="button" class="theme-btn" aria-label="Basculer entre thème clair et sombre" title="Thème clair / sombre">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg>
+    </button>
+  </header>
+  <div class="cadre">
+    <nav id="nav" class="nav" aria-label="Navigation principale"></nav>
+    <main id="contenu" tabindex="-1">
+      <noscript><p class="page">Ce cahier a besoin de JavaScript pour afficher les fiches et corriger les exercices.</p></noscript>
+    </main>
+  </div>
+  <script src="assets/vendor/marked.umd.js"></script>
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/exercises.js"></script>
+  <script src="data/catalogue.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

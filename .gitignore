@@ -1,0 +1,10 @@
+# Réglages locaux du labo Proxmox (peuvent contenir un jeton)
+infra/proxmox/lab.conf
+
+# Le livre ne doit pas être versionné
+*.pdf
+
+# Divers
+node_modules/
+.DS_Store
+*.swp

@@ -1,0 +1,22 @@
+#!/bin/bash
+# Sauvegarde des recettes de la Brasserie du Noyau.
+#   sauvegarde-recettes             crée /srv/brasserie/archives/recettes-AAAA-MM-JJ.tar.gz
+#   sauvegarde-recettes --verifier  vérifie seulement que tout est prêt
+set -euo pipefail
+
+SOURCE=/srv/brasserie/partage/brassage
+DEST=/srv/brasserie/archives
+
+if [[ ! -d "$SOURCE" || ! -d "$DEST" ]]; then
+  echo "sauvegarde-recettes: ${SOURCE} ou ${DEST} introuvable" >&2
+  exit 1
+fi
+
+if [[ "${1:-}" == "--verifier" ]]; then
+  echo "Prêt : ${SOURCE} sera sauvegardé dans ${DEST}"
+  exit 0
+fi
+
+ARCHIVE="${DEST}/recettes-$(date +%F).tar.gz"
+tar czf "$ARCHIVE" -C "$(dirname "$SOURCE")" "$(basename "$SOURCE")"
+echo "Sauvegarde terminée : ${ARCHIVE}"

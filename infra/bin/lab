@@ -1,0 +1,138 @@
+#!/usr/bin/env bash
+# lab : outil des labs « How Linux Works » (installé dans les VM par cloud-init).
+#
+#   lab list              labs disponibles et état
+#   lab start 01          prépare la machine pour le lab 01
+#   lab check 01          corrige ton travail, objectif par objectif
+#   lab hint 01 [1|2|3]   indices de niveau 1 (piste), 2 (direction) ou 3 (presque la solution)
+#   lab reset 01          remet la machine dans l'état d'avant le lab
+#   lab solution 01       affiche la solution complète (après confirmation)
+#   lab update            met à jour le dépôt (git pull)
+#
+# Les actions qui modifient le système se relancent automatiquement avec sudo.
+
+set -euo pipefail
+
+SCRIPT="$(readlink -f "${BASH_SOURCE[0]}")"
+LAB_HOME="${LAB_HOME:-$(cd "$(dirname "$SCRIPT")/../.." && pwd)}"
+LABS="${LAB_HOME}/labs"
+ETAT_DIR="/var/lib/hlw"
+
+if [[ -t 1 ]]; then G=$'\e[1m'; V=$'\e[32m'; J=$'\e[33m'; R=$'\e[31m'; Z=$'\e[0m'; else G=''; V=''; J=''; R=''; Z=''; fi
+
+mourir() { printf '%serreur :%s %s\n' "$R" "$Z" "$*" >&2; exit 1; }
+
+usage() { sed -n '3,12p' "$SCRIPT" | sed 's/^# \{0,1\}//'; }
+
+en_root() {
+  if [[ $EUID -ne 0 ]]; then
+    exec sudo LAB_HOME="$LAB_HOME" LAB_UTILISATEUR="${USER:-}" "$SCRIPT" "$@"
+  fi
+}
+
+# « 1 », « 01 », « lab01 » → chemin du répertoire du lab
+dossier_lab() {
+  local n="${1:-}"
+  [[ -n "$n" ]] || mourir "précise le numéro du lab (ex. : lab $ACTION 01)"
+  n="${n#lab}"
+  [[ "$n" =~ ^[0-9]+$ ]] || mourir "numéro de lab invalide : $1"
+  n="$(printf '%02d' "$((10#$n))")"
+  local d
+  for d in "$LABS"/lab"${n}"-*/; do
+    [[ -d "$d" ]] && { echo "${d%/}"; return 0; }
+  done
+  mourir "lab ${n} introuvable dans ${LABS} (essaie : lab update)"
+}
+
+titre_lab() { grep -m1 '^# ' "$1/README.md" 2>/dev/null | sed 's/^# //' || basename "$1"; }
+num_lab() { basename "$1" | sed -E 's/^lab([0-9]+).*/\1/'; }
+
+ACTION="${1:-}"
+shift || true
+
+case "$ACTION" in
+  list|liste|ls)
+    printf '%sLabs disponibles%s (dépôt : %s)\n\n' "$G" "$Z" "$LAB_HOME"
+    for d in "$LABS"/lab[0-9]*/; do
+      d="${d%/}"; n="$(num_lab "$d")"
+      etat=""
+      if [[ -f "${ETAT_DIR}/lab${n}.resultats" ]]; then
+        dernier="$(tail -1 "${ETAT_DIR}/lab${n}.resultats" | awk '{print $3}')"
+        if [[ "${dernier%%/*}" == "${dernier##*/}" ]]; then etat="${V}validé ${dernier}${Z}"; else etat="${J}en cours ${dernier}${Z}"; fi
+      elif [[ -f "${ETAT_DIR}/lab${n}.demarre" ]]; then
+        etat="${J}démarré${Z}"
+      fi
+      printf '  %s%s%s  %-50s %s\n' "$G" "$n" "$Z" "$(titre_lab "$d")" "$etat"
+    done
+    echo
+    echo "Énoncés : ${LABS}/labNN-*/README.md (ou sur GitHub). Commence par : lab start 01"
+    ;;
+
+  start|demarrer)
+    en_root "$ACTION" "$@"
+    d="$(dossier_lab "${1:-}")"; n="$(num_lab "$d")"
+    if [[ -x "$d/setup.sh" ]]; then
+      printf '%sPréparation du lab %s : %s%s\n' "$G" "$n" "$(titre_lab "$d")" "$Z"
+      LAB_UTILISATEUR="${LAB_UTILISATEUR:-${SUDO_USER:-}}" "$d/setup.sh"
+    else
+      echo "Ce lab n'a pas besoin de préparation."
+    fi
+    mkdir -p "$ETAT_DIR"; date '+%F %T' > "${ETAT_DIR}/lab${n}.demarre"
+    printf '\n%sC’est parti.%s Lis l’énoncé : less %s/README.md\nQuand tu penses avoir fini : lab check %s\n' "$V" "$Z" "$d" "$n"
+    ;;
+
+  check|verifier)
+    en_root "$ACTION" "$@"
+    d="$(dossier_lab "${1:-}")"; n="$(num_lab "$d")"
+    [[ -x "$d/check.sh" ]] || mourir "pas de script de correction pour le lab ${n}"
+    printf '%sCorrection du lab %s : %s%s\n\n' "$G" "$n" "$(titre_lab "$d")" "$Z"
+    LAB_UTILISATEUR="${LAB_UTILISATEUR:-${SUDO_USER:-}}" "$d/check.sh"
+    ;;
+
+  hint|indice)
+    d="$(dossier_lab "${1:-}")"
+    niveau="${2:-1}"
+    [[ "$niveau" =~ ^[123]$ ]] || mourir "niveau d’indice : 1, 2 ou 3"
+    [[ -f "$d/indices.md" ]] || mourir "pas d’indices pour ce lab"
+    printf '%sIndices de niveau %s%s (%s)\n\n' "$G" "$niveau" "$Z" \
+      "$(case $niveau in 1) echo 'une piste' ;; 2) echo 'une direction' ;; 3) echo 'presque la solution' ;; esac)"
+    awk -v n="$niveau" '
+      /^## Niveau / { garder = ($3 == n); next }
+      /^## / { garder = 0 }
+      garder { print }
+    ' "$d/indices.md"
+    ;;
+
+  reset|reinitialiser)
+    en_root "$ACTION" "$@"
+    d="$(dossier_lab "${1:-}")"; n="$(num_lab "$d")"
+    if [[ -x "$d/reset.sh" ]]; then
+      "$d/reset.sh"
+      rm -f "${ETAT_DIR}/lab${n}.demarre"
+      printf '%sLab %s remis à zéro.%s Pour recommencer : lab start %s\n' "$V" "$n" "$Z" "$n"
+    else
+      echo "Ce lab n’a pas de remise à zéro automatique : restaure un instantané Proxmox."
+    fi
+    ;;
+
+  solution)
+    d="$(dossier_lab "${1:-}")"
+    [[ -f "$d/solution.md" ]] || mourir "pas de solution rédigée pour ce lab"
+    read -r -p "Afficher la solution complète ? As-tu essayé les trois niveaux d’indices ? [o/N] " r
+    [[ "$r" =~ ^[oOyY]$ ]] || exit 0
+    "${PAGER:-less}" "$d/solution.md"
+    ;;
+
+  update|maj)
+    en_root "$ACTION" "$@"
+    git -C "$LAB_HOME" pull --ff-only
+    ;;
+
+  ""|-h|--help|help|aide)
+    usage
+    ;;
+
+  *)
+    mourir "action inconnue : ${ACTION} (lab help)"
+    ;;
+esac

@@ -1,0 +1,8 @@
+[Unit]
+Description=Boutique en ligne de la Brasserie du Noyau (simulation, lab 01)
+
+[Service]
+ExecStart=/bin/sleep infinity
+
+[Install]
+WantedBy=multi-user.target

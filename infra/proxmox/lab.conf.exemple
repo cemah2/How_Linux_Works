@@ -1,0 +1,68 @@
+# Configuration du labo « How Linux Works » sur Proxmox VE.
+# Copie ce fichier en lab.conf (même répertoire) et adapte-le :
+#   cp lab.conf.exemple lab.conf && nano lab.conf
+# lab.conf est ignoré par git : tes réglages restent locaux.
+
+# --- Stockage -----------------------------------------------------------
+# Stockage des disques des VM (vérifie avec : pvesm status)
+STOCKAGE="local-lvm"
+# Stockage qui accepte le type de contenu « snippets » (pour cloud-init).
+# Pour l'activer sur « local » : pvesm set local --content iso,vztmpl,backup,snippets
+STOCKAGE_SNIPPETS="local"
+# Répertoire où télécharger les images cloud
+REPERTOIRE_IMAGES="/var/lib/vz/template/hlw"
+
+# --- Réseau -------------------------------------------------------------
+# Pont relié à ton réseau local (accès Internet pour les VM)
+PONT="vmbr0"
+# Pont isolé pour les labs réseau (Lab 07 et suivants). Laisse vide pour l'instant.
+PONT_LAB=""
+# Adressage : "dhcp" ou une adresse fixe par VM (voir IP_CUVE, IP_FUT…)
+MODE_IP="dhcp"
+# Si MODE_IP="statique" :
+IP_CUVE="192.168.1.211/24"
+IP_FUT="192.168.1.212/24"
+PASSERELLE="192.168.1.1"
+DNS="192.168.1.1"
+
+# --- Identifiants des VM ----------------------------------------------------
+ID_MODELE_DEBIAN=9013
+ID_MODELE_ROCKY=9010
+ID_CUVE=211
+ID_FUT=212
+ID_DOUANE=213
+ID_COMPTOIR=214
+
+# --- Ressources -------------------------------------------------------------
+MEMOIRE=2048          # Mio par VM
+COEURS=2
+TAILLE_DISQUE="16G"
+# « host » est indispensable pour Rocky Linux 10 (exige x86-64-v3 / AVX2).
+TYPE_CPU="host"
+# 1 = clones liés (rapides, économes, nécessitent un stockage qui gère les instantanés
+# comme local-lvm ou ZFS) ; 0 = clones complets.
+CLONES_LIES=1
+
+# --- Accès --------------------------------------------------------------
+UTILISATEUR="admin"
+# Ta clé SSH PUBLIQUE (copie-la sur l'hôte Proxmox, par exemple dans /root/cle-labo.pub)
+CLE_SSH="/root/cle-labo.pub"
+# Mot de passe pour la console Proxmox (indispensable pour les labs de dépannage du
+# démarrage). Laisse vide pour n'autoriser que la clé SSH. Il est haché par Proxmox.
+MOT_DE_PASSE=""
+FUSEAU="Europe/Paris"
+
+# --- Dépôt ------------------------------------------------------------------
+# Dépôt cloné dans chaque VM (outil « lab » et scénarios de labs).
+# Dépôt PRIVÉ : crée un jeton GitHub « fine-grained » en lecture seule limité à ce dépôt
+# (Settings > Developer settings > Personal access tokens) et utilise :
+#   DEPOT="https://JETON@github.com/cemah2/How_Linux_Works.git"
+# Le jeton sera visible dans les VM (.git/config) et dans le snippet sur l'hôte : lecture seule impérativement.
+DEPOT="https://github.com/cemah2/How_Linux_Works.git"
+BRANCHE="main"
+
+# --- Images cloud (versions vérifiées en novembre 2026) ---------------------
+URL_DEBIAN="https://cloud.debian.org/images/cloud/trixie/latest/debian-13-genericcloud-amd64.qcow2"
+URL_SOMMES_DEBIAN="https://cloud.debian.org/images/cloud/trixie/latest/SHA512SUMS"
+URL_ROCKY="https://dl.rockylinux.org/pub/rocky/10/images/x86_64/Rocky-10-GenericCloud-Base.latest.x86_64.qcow2"
+URL_SOMME_ROCKY="https://dl.rockylinux.org/pub/rocky/10/images/x86_64/Rocky-10-GenericCloud-Base.latest.x86_64.qcow2.CHECKSUM"

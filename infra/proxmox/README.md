@@ -1,0 +1,70 @@
+# Infrastructure du labo sur Proxmox VE
+
+Scripts à lancer **en root sur l’hôte Proxmox** (testés pour Proxmox VE 8 et 9). Ils créent et pilotent les
+machines virtuelles de la Brasserie du Noyau à partir des images cloud officielles.
+
+| Script | Rôle |
+|---|---|
+| `creer-modeles.sh` | télécharge Debian 13 et Rocky Linux 10 (images cloud), vérifie les sommes de contrôle, crée deux modèles cloud-init |
+| `deployer.sh base` | clone les modèles en `cuve` (Debian) et `fut` (Rocky), injecte ton utilisateur, ta clé SSH, les paquets, le dépôt et la commande `lab` |
+| `instantane.sh` | `creer`, `restaurer`, `liste`, `supprimer` des instantanés sur **toutes** les VM du labo |
+| `detruire.sh` | supprime les VM du labo (`--modeles` : les modèles aussi) |
+| `lab.conf.exemple` | paramètres à copier en `lab.conf` |
+| `snippets/` | données cloud-init « vendor » (paquets, clonage du dépôt) |
+
+Le pas à pas complet est dans le [Lab 00](../../labs/lab00-mise-en-place/README.md).
+
+## Démarrage rapide
+
+```
+# git clone https://github.com/cemah2/How_Linux_Works.git /root/how-linux-works
+# cd /root/how-linux-works/infra/proxmox
+# cp lab.conf.exemple lab.conf && nano lab.conf
+# ./creer-modeles.sh
+# ./deployer.sh base
+# ./instantane.sh creer propre
+```
+
+## Ce que font les scripts, en détail
+
+- Les VM et modèles du labo sont repérés par des **étiquettes** Proxmox : `hlw` pour les VM, `hlwmodele` pour les modèles.
+  Les scripts ne touchent jamais à une VM qui ne porte pas ces étiquettes.
+- Les images sont stockées dans `REPERTOIRE_IMAGES` et ne sont téléchargées qu’une fois.
+- Les modèles utilisent le type de CPU `host` (obligatoire pour Rocky Linux 10, qui exige x86-64-v3), un contrôleur
+  virtio-scsi, un disque redimensionné à `TAILLE_DISQUE`, un lecteur cloud-init, une console série et l’agent invité QEMU.
+- `deployer.sh` dépose les snippets cloud-init dans le stockage `STOCKAGE_SNIPPETS`, clone les modèles (liés ou complets
+  selon `CLONES_LIES`), règle cloud-init (`ciuser`, `sshkeys`, `ipconfig0`, `cicustom vendor=…`), démarre les VM, puis attend
+  que l’agent invité remonte leur adresse IP.
+- Au premier démarrage, cloud-init installe les outils (git, vim, man, strace, lsof…), clone ce dépôt dans
+  `/opt/how-linux-works` et crée le lien `/usr/local/bin/lab`.
+
+## Réseau
+
+Par défaut les VM sont sur `vmbr0` en DHCP, comme n’importe quelle machine de ton réseau local. Pour des adresses fixes :
+`MODE_IP="statique"` et les variables `IP_*`, `PASSERELLE`, `DNS`.
+
+Les labs réseau (à partir du Lab 07) utiliseront en plus un **pont isolé** (`PONT_LAB`) sans carte physique, sur lequel
+`douane` jouera le rôle de routeur. Il sera créé le moment venu, avec ses instructions.
+
+## Dépannage
+
+| Symptôme | Cause probable | Solution |
+|---|---|---|
+| `le stockage « local » n’accepte pas les snippets` | type de contenu non activé | `pvesm set local --content iso,vztmpl,backup,snippets` (garde les types déjà présents) |
+| La VM Rocky redémarre en boucle ou affiche un *kernel panic* | CPU sans AVX2 exposé | `qm set 212 --cpu host` ; si l’hôte n’a pas AVX2, utilise Rocky 9 (modifie `URL_ROCKY` et `URL_SOMME_ROCKY`) |
+| `adresse IP non obtenue` | cloud-init encore en cours, ou agent invité absent | attends, regarde la console de la VM ; `qm agent 211 ping` |
+| `Permission denied (publickey)` en SSH | mauvaise clé dans `CLE_SSH` | la clé **publique** de ton ordinateur ; `qm set 211 --sshkeys /root/cle-labo.pub` puis `qm cloudinit update 211` et redémarrage |
+| Le dépôt n’est pas dans la VM | dépôt privé ou pas d’Internet au premier démarrage | voir `lab hint 00 3` |
+| `somme de contrôle incorrecte` | téléchargement interrompu | relance le script (le fichier fautif a été supprimé) |
+
+## Sans Proxmox ?
+
+Les labs fonctionnent sur n’importe quelle VM Debian 13 ou Rocky Linux 10 (VirtualBox, UTM, Hyper-V, cloud) :
+
+```
+$ sudo git clone https://github.com/cemah2/How_Linux_Works.git /opt/how-linux-works
+$ sudo ln -s /opt/how-linux-works/infra/bin/lab /usr/local/bin/lab
+$ lab list
+```
+
+Nomme la VM `cuve` ou `fut` pour coller au fil rouge, et prends un instantané avec ton hyperviseur avant chaque lab.
