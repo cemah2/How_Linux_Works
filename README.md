@@ -44,9 +44,10 @@ Puis, dans une VM : `lab list`, `lab start 01`, `lab check 01`, `lab hint 01 2`.
 | Chapitre 0 : mise en place | 4 fiches, 16 exercices | ✅ |
 | Chapitre 1 : vue d’ensemble | 6 fiches, 36 exercices | ✅ |
 | Chapitre 2 : commandes et arborescence | 17 fiches (dont 2 hors livre), 146 exercices | ✅ |
-| Infrastructure Proxmox + outil `lab` | modèles, déploiement, instantanés | ✅ |
-| Labs 00 et 01 | mise en place, premier jour à la brasserie | ✅ |
-| Chapitres 3 à 17, modules A1 à A8, labs 02 à 13 | | voir [ROADMAP.md](ROADMAP.md) |
+| Chapitres 3 à 8 : le système de l’intérieur | 48 fiches, 269 exercices, examen blanc du bloc 2 | ✅ |
+| Infrastructure Proxmox + outil `lab` | modèles, déploiement, instantanés, disques supplémentaires | ✅ |
+| Labs 00 à 06 | mise en place, permissions, disques/LVM, démarrage, systemd, comptes/PAM, performances | ✅ |
+| Chapitres 9 à 17, modules A1 à A8, labs 07 à 13 | | voir [ROADMAP.md](ROADMAP.md) |
 
 ## Organisation du dépôt
 

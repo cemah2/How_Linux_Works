@@ -8,6 +8,7 @@ machines virtuelles de la Brasserie du Noyau à partir des images cloud officiel
 | `creer-modeles.sh` | télécharge Debian 13 et Rocky Linux 10 (images cloud), vérifie les sommes de contrôle, crée deux modèles cloud-init |
 | `deployer.sh base` | clone les modèles en `cuve` (Debian) et `fut` (Rocky), injecte ton utilisateur, ta clé SSH, les paquets, le dépôt et la commande `lab` |
 | `instantane.sh` | `creer`, `restaurer`, `liste`, `supprimer` des instantanés sur **toutes** les VM du labo |
+| `ajouter-disques.sh` | ajoute à chaud des disques vierges à une VM (Lab 02) ; `--retirer` les détruit |
 | `detruire.sh` | supprime les VM du labo (`--modeles` : les modèles aussi) |
 | `lab.conf.exemple` | paramètres à copier en `lab.conf` |
 | `snippets/` | données cloud-init « vendor » (paquets, clonage du dépôt) |
@@ -38,6 +39,19 @@ Le pas à pas complet est dans le [Lab 00](../../labs/lab00-mise-en-place/README
 - Au premier démarrage, cloud-init installe les outils (git, vim, man, strace, lsof…), clone ce dépôt dans
   `/opt/how-linux-works` et crée le lien `/usr/local/bin/lab`.
 
+## Disques supplémentaires (Lab 02)
+
+```
+# ./ajouter-disques.sh cuve            # 2 disques de 2 Go sur le contrôleur SCSI, VM allumée ou non
+# ./ajouter-disques.sh fut 3 4         # 3 disques de 4 Go
+# ./ajouter-disques.sh cuve --retirer  # après « lab reset 02 » dans la VM
+```
+
+Les disques portent le numéro de série `hlw-lab-N` (visible dans la VM avec `lsblk -o NAME,SERIAL`) : le Lab 02 les
+reconnaît ainsi, et `--retirer` ne détruit qu’eux. Si tu restaures un instantané pris **avant** leur ajout, vérifie
+l’onglet « Matériel » de la VM : les disques peuvent y apparaître comme inutilisés. Relance alors le script, ou
+supprime-les depuis l’interface.
+
 ## Réseau
 
 Par défaut les VM sont sur `vmbr0` en DHCP, comme n’importe quelle machine de ton réseau local. Pour des adresses fixes :
@@ -56,6 +70,8 @@ Les labs réseau (à partir du Lab 07) utiliseront en plus un **pont isolé** (`
 | `Permission denied (publickey)` en SSH | mauvaise clé dans `CLE_SSH` | la clé **publique** de ton ordinateur ; `qm set 211 --sshkeys /root/cle-labo.pub` puis `qm cloudinit update 211` et redémarrage |
 | Le dépôt n’est pas dans la VM | dépôt privé ou pas d’Internet au premier démarrage | voir `lab hint 00 3` |
 | `somme de contrôle incorrecte` | téléchargement interrompu | relance le script (le fichier fautif a été supprimé) |
+| `lab start 02` : « il faut deux disques vierges » | disques pas encore ajoutés | `./ajouter-disques.sh cuve`, puis `lsblk` dans la VM |
+| Lab 03 : « Cannot open access to console, the root account is locked » | pas de mot de passe root avant la panne | restaure l’instantané `avant-lab03`, `sudo passwd root`, puis `lab panne 03` |
 
 ## Sans Proxmox ?
 

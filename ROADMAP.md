@@ -11,16 +11,17 @@ Livraison par blocs, chacun validé avant de passer au suivant.
 - [x] Lab 00 (mise en place) et Lab 01 (premier jour à la brasserie)
 - [x] Validation automatique des données, shellcheck, CI, publication GitHub Pages
 
-## Livraison 2 : le système de l’intérieur (chapitres 3 à 8)
+## Livraison 2 : le système de l’intérieur (chapitres 3 à 8) ✅
 
-- [ ] Ch. 3 Périphériques : fichiers de périphériques, sysfs, dd, udev, SCSI
-- [ ] Ch. 4 Disques et systèmes de fichiers : partitions, mkfs, mount, fstab, UUID, swap, LVM, inodes
-- [ ] Ch. 5 Démarrage du noyau : messages, paramètres, GRUB, UEFI, Secure Boot
-- [ ] Ch. 6 Espace utilisateur : systemd (unités, dépendances, activation à la demande), System V, initramfs, mode secours
-- [ ] Ch. 7 Configuration : journald, logrotate, /etc/passwd et shadow, heure et NTP, cron et timers, at, UID réel/effectif, PAM
-- [ ] Ch. 8 Processus et ressources : lsof, strace, ltrace, threads, top, nice, load average, vmstat, iostat, pidstat, cgroups v2
-- [ ] Labs 02 (disques et LVM), 03 (sauvetage du démarrage), 04 (systemd), 05 (comptes, PAM), 06 (performances)
-- [ ] Examen blanc du bloc 2
+- [x] Ch. 3 Périphériques : fichiers de périphériques, sysfs, dd, udev, SCSI
+- [x] Ch. 4 Disques et systèmes de fichiers : partitions, mkfs, mount, fstab, UUID, swap, LVM, inodes
+- [x] Ch. 5 Démarrage du noyau : messages, paramètres, GRUB, UEFI, Secure Boot
+- [x] Ch. 6 Espace utilisateur : systemd (unités, dépendances, activation à la demande), System V, initramfs, mode secours
+- [x] Ch. 7 Configuration : journald, logrotate, /etc/passwd et shadow, heure et NTP, cron et timers, at, UID réel/effectif, PAM
+- [x] Ch. 8 Processus et ressources : lsof, strace, ltrace, threads, top, nice, load average, vmstat, iostat, pidstat, cgroups v2
+- [x] Labs 02 (disques et LVM), 03 (sauvetage du démarrage), 04 (systemd), 05 (comptes, PAM), 06 (performances)
+- [x] Examen blanc du bloc 2 (généré à partir des exercices des chapitres 3 à 8)
+- [x] `infra/proxmox/ajouter-disques.sh`, sous-commande `lab panne`, tests de bout en bout des labs dans la CI
 
 ## Livraison 3 : réseau (chapitres 9, 10, 12)
 

@@ -18,11 +18,11 @@ tu es l’administrateur ou l’administratrice système de la **Brasserie du No
 |---|---|---|---|
 | [00](lab00-mise-en-place/) | Monter ton labo sur Proxmox | 0 | disponible |
 | [01](lab01-premier-jour/) | Premier jour à la brasserie | 2 | disponible |
-| 02 | Disques, partitions et volumes | 3, 4 | à venir |
-| 03 | Sauvetage du démarrage | 5, 6 | à venir |
-| 04 | Services maison avec systemd | 6, 7 | à venir |
-| 05 | Comptes, sudo et PAM | 7 | à venir |
-| 06 | Le serveur qui rame | 8 | à venir |
+| [02](lab02-disques/) | De nouveaux disques pour la boutique | 3, 4 | disponible |
+| [03](lab03-demarrage/) | Sauvetage du démarrage | 5, 6 | disponible |
+| [04](lab04-services/) | Des services dignes de ce nom | 6, 7 | disponible |
+| [05](lab05-comptes/) | Arrivées, départ et journaux | 7 | disponible |
+| [06](lab06-performances/) | Le serveur qui rame | 8 | disponible |
 | 07 | Le réseau de la brasserie | 9 | à venir |
 | 08 | Accès distants sécurisés | 10 | à venir |
 | 09 | Scripts d’exploitation | 11, 13 | à venir |
@@ -43,7 +43,17 @@ Structure d’un répertoire `labNN-nom/` :
 | `reset.sh` | défait tout ce que `setup.sh` a créé |
 | `indices.md` | sections `## Niveau 1`, `## Niveau 2`, `## Niveau 3` (lues par `lab hint`) |
 | `solution.md` | solution commentée |
+| `panne.sh` | (labs de dépannage) déclenche la panne, lancé par `lab panne NN` |
 | `fichiers/` | fichiers copiés par `setup.sh` |
 
 Les scripts doivent fonctionner sur **Debian 13 et Rocky Linux 10** (variables `FAMILLE` et `GROUPE_ADMIN` de `lib/commun.sh`)
-et passer `shellcheck` (vérifié par la CI).
+et passer `shellcheck` (vérifié par la CI). Chaque lab a un test de bout en bout `tools/tester-labNN.sh`
+(setup → correction qui échoue → solution → correction qui valide → reset), joué par la CI sur une machine jetable.
+
+Quelques règles apprises à la dure :
+
+- Un démon de lab qu’on veut retrouver par son nom (`pgrep -x`, `pkill -x`) commence par `#!/bin/bash` ou
+  `#!/usr/bin/python3`, jamais par `#!/usr/bin/env …` : sinon le processus s’appelle `bash` ou `python3`.
+- Jamais de `pkill -f motif` dans un reset : il tue aussi le shell de l’étudiant si sa ligne de commande contient le motif.
+- Les comptes partagés entre labs (bastien, malik, ines, chloe) se créent avec `assurer_compte`, qui note ce qu’il crée :
+  le reset d’un lab ne supprime que ce que ce lab a créé.
