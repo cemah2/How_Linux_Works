@@ -1,0 +1,25 @@
+libdensite 1.0
+==============
+
+Petite bibliothèque partagée de calculs de densité (taux d'alcool, atténuation) utilisée par les outils de la
+Brasserie du Noyau.
+
+Construction et installation
+----------------------------
+
+Pas de script configure : le Makefile se règle avec la variable PREFIX (par défaut /usr/local).
+
+    make PREFIX=/opt/densite
+    make PREFIX=/opt/densite install
+
+Attention : PREFIX est écrit dans densite.pc au moment de la construction. Utilise la MÊME valeur pour
+« make » et pour « make install » (en cas d'erreur : make clean, puis recommence).
+
+Fichiers installés : lib/libdensite.so.1.0 (et ses liens libdensite.so.1, libdensite.so), include/densite.h,
+lib/pkgconfig/densite.pc.
+
+Changements
+-----------
+
+1.0 : formule de taux d'alcool corrigée (coefficient 131,25), ajout de densite_attenuation().
+0.9 : première version (formule approximative).

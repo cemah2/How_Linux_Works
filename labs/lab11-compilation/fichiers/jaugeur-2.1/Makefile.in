@@ -1,0 +1,40 @@
+# Makefile.in : modèle transformé en Makefile par ./configure. Ne pas modifier le Makefile à la main.
+prefix = @prefix@
+bindir = $(prefix)/bin
+mandir = $(prefix)/share/man
+
+CC = @CC@
+CFLAGS = @CFLAGS@
+CPPFLAGS = @CPPFLAGS@
+LDFLAGS = @LDFLAGS@
+LIBS = @LIBS@
+
+all: jaugeur
+
+jaugeur: src/jaugeur.o
+	$(CC) $(LDFLAGS) -o $@ src/jaugeur.o $(LIBS)
+
+src/jaugeur.o: src/jaugeur.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ src/jaugeur.c
+
+check: jaugeur
+	./jaugeur tests/exemple.csv > tests/resultat.txt
+	@if cmp -s tests/attendu.txt tests/resultat.txt; then \
+	  echo "RÉSULTAT : OK" | tee test-suite.log; \
+	else \
+	  echo "RÉSULTAT : ÉCHEC (résultats différents de tests/attendu.txt)" | tee test-suite.log; \
+	  diff tests/attendu.txt tests/resultat.txt | tee -a test-suite.log; exit 1; \
+	fi
+
+install: jaugeur
+	install -d $(DESTDIR)$(bindir) $(DESTDIR)$(mandir)/man1
+	install -m 755 jaugeur $(DESTDIR)$(bindir)/jaugeur
+	install -m 644 jaugeur.1 $(DESTDIR)$(mandir)/man1/jaugeur.1
+
+clean:
+	rm -f jaugeur src/*.o tests/resultat.txt test-suite.log
+
+distclean: clean
+	rm -f Makefile config.log
+
+.PHONY: all check install clean distclean

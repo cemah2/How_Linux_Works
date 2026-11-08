@@ -1,0 +1,9 @@
+prefix=@prefix@
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: densite
+Description: Calculs de densité et de taux d'alcool pour la brasserie
+Version: @version@
+Libs: -L${libdir} -ldensite
+Cflags: -I${includedir}

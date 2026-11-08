@@ -1,0 +1,34 @@
+Correctif de sécurité pour jaugeur 2.1 (version 2.1-p1)
+
+Un nom de cuve de plus de 15 caractères débordait du tampon « cuve » dans traiter() :
+plantage, voire exécution de code avec un relevé piégé. La lecture est désormais limitée
+à 15 caractères ; les lignes trop longues sont ignorées.
+
+À appliquer depuis la racine des sources de jaugeur-2.1.
+
+--- a/src/jaugeur.c
++++ b/src/jaugeur.c
+@@ -5,7 +5,7 @@
+ #include <zlib.h>
+ #include <densite.h>
+ 
+-#define VERSION "2.1"
++#define VERSION "2.1-p1"
+ 
+ static void usage(void)
+ {
+@@ -16,12 +16,12 @@
+  * (noinline : fonction gardée séparée de main, plus simple à suivre dans un débogueur.) */
+ static int __attribute__((noinline)) traiter(const char *ligne)
+ {
+-    char cuve[16];
++    char cuve[16];   /* au plus 15 caractères + le zéro final */
+     double og, fg;
+ 
+     if (ligne[0] == '#' || ligne[0] == '\n')
+         return 0;
+-    if (sscanf(ligne, "%[^;];%lf;%lf", cuve, &og, &fg) != 3)
++    if (sscanf(ligne, "%15[^;];%lf;%lf", cuve, &og, &fg) != 3)
+         return 0;
+     printf("%-15s %5.2f %% vol.  atténuation %5.1f %%\n",
+            cuve, densite_abv(og, fg), densite_attenuation(og, fg));

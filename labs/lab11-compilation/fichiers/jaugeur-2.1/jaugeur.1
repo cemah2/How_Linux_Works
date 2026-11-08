@@ -1,0 +1,14 @@
+.TH JAUGEUR 1 "2026" "jaugeur 2.1" "Outils de la Brasserie du Noyau"
+.SH NOM
+jaugeur \- taux d'alcool et atténuation des cuves
+.SH SYNOPSIS
+.B jaugeur
+.RB [ \-\-version ]
+.I FICHIER.csv[.gz]
+.SH DESCRIPTION
+Lit un relevé au format
+.IR cuve ; densité\ initiale ; densité\ finale ,
+compressé ou non, et affiche pour chaque cuve le taux d'alcool et l'atténuation apparente.
+Les lignes qui commencent par # sont ignorées.
+.SH CODES DE SORTIE
+0 si au moins une mesure a été lue, 1 sinon, 2 en cas d'erreur d'utilisation.

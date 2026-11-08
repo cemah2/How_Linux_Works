@@ -1,0 +1,13 @@
+Installation de jaugeur
+=======================
+
+    ./configure [--prefix=/usr/local]
+    make
+    make check
+    make install
+
+./configure --help liste les options et les variables (CPPFLAGS, LDFLAGS, PKG_CONFIG_PATH…).
+En cas d'échec de configure, lis config.log (depuis la fin).
+
+« make check » lance jaugeur sur tests/exemple.csv : le programme doit donc pouvoir trouver
+libdensite au lancement.

@@ -1,0 +1,18 @@
+jaugeur 2.1
+===========
+
+Calcule le taux d'alcool et l'atténuation des cuves à partir d'un relevé CSV (compressé en gzip ou non).
+
+Dépendances
+-----------
+
+- libdensite >= 1.0 (bibliothèque maison, trouvée par pkg-config : fichier densite.pc) ;
+- zlib, avec ses en-têtes (paquet de développement).
+
+Voir INSTALL pour la construction.
+
+Sécurité
+--------
+
+Un correctif est publié pour la 2.1 (lecture d'un nom de cuve trop long) : jaugeur-2.1-securite.patch.
+Applique-le avant de construire ; la version affichée devient alors 2.1-p1.

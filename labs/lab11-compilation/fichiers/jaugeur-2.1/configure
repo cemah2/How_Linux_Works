@@ -1,0 +1,126 @@
+#!/bin/sh
+# configure : prépare la compilation de jaugeur.
+# Écrit à la main « à la manière d'autoconf » : un vrai script généré par autoconf fait le même travail,
+# en des milliers de lignes. ./configure --help pour les options.
+
+prefix=/usr/local
+
+for arg in "$@"; do
+  case $arg in
+    --prefix=*) prefix=${arg#--prefix=} ;;
+    --help|-h)
+      cat <<'AIDE'
+Utilisation : ./configure [OPTION]... [VARIABLE=VALEUR]...
+
+Options :
+  --prefix=PRÉFIXE   installer sous PRÉFIXE (par défaut : /usr/local)
+  -h, --help         afficher cette aide
+
+Variables utiles (en argument ou dans l'environnement) :
+  CC                compilateur C (par défaut : cc)
+  CFLAGS            options du compilateur
+  CPPFLAGS          options du préprocesseur, par exemple -I/rép/include
+  LDFLAGS           options de l'édition de liens, par exemple -L/rép/lib
+  PKG_CONFIG_PATH   répertoires supplémentaires où pkg-config cherche les fichiers .pc
+
+Dépendances : la bibliothèque densite (trouvée par pkg-config) et zlib (en-têtes compris).
+AIDE
+      exit 0 ;;
+    CC=*) CC=${arg#*=} ;;
+    CFLAGS=*) CFLAGS=${arg#*=} ;;
+    CPPFLAGS=*) CPPFLAGS=${arg#*=} ;;
+    LDFLAGS=*) LDFLAGS=${arg#*=} ;;
+    PKG_CONFIG_PATH=*) PKG_CONFIG_PATH=${arg#*=}; export PKG_CONFIG_PATH ;;
+    *) echo "configure: error: option inconnue : $arg (voir ./configure --help)" >&2; exit 1 ;;
+  esac
+done
+
+CC=${CC:-cc}
+CFLAGS=${CFLAGS:--O2 -Wall}
+CPPFLAGS=${CPPFLAGS:-}
+LDFLAGS=${LDFLAGS:-}
+
+exec 5>config.log
+{
+  echo "Ce fichier contient les messages de configure, pour comprendre un échec."
+  echo
+  echo "  \$ $0 $*"
+  echo
+  echo "## Environnement ##"
+  echo "CC=$CC"
+  echo "CFLAGS=$CFLAGS"
+  echo "CPPFLAGS=$CPPFLAGS"
+  echo "LDFLAGS=$LDFLAGS"
+  echo "PKG_CONFIG_PATH=${PKG_CONFIG_PATH:-}"
+  echo
+} >&5
+
+verifie() { printf 'checking %s... ' "$1"; echo "configure: checking $1" >&5; }
+resultat() { echo "$1"; echo "configure: result: $1" >&5; }
+echec() {
+  resultat no
+  echo "configure: error: $1" >&2
+  echo "configure: error: $1" >&5
+  echo "Voir 'config.log' pour plus de détails." >&2
+  rm -f conftest conftest.c conftest.o
+  exit 1
+}
+# essaie COMMANDE… : lance une commande de test en la notant dans config.log
+essaie() {
+  echo "configure: $*" >&5
+  "$@" >&5 2>&1
+  code=$?
+  echo "configure: \$? = $code" >&5
+  return $code
+}
+
+verifie "whether the C compiler works"
+printf 'int main(void) { return 0; }\n' > conftest.c
+# shellcheck disable=SC2086
+essaie $CC $CFLAGS $CPPFLAGS $LDFLAGS conftest.c -o conftest || echec "C compiler cannot create executables"
+resultat yes
+
+verifie "for pkg-config"
+command -v pkg-config >/dev/null 2>&1 || echec "pkg-config est introuvable : installe-le"
+resultat "$(command -v pkg-config)"
+
+verifie "for densite"
+if ! essaie pkg-config --exists --print-errors densite; then
+  echec "bibliothèque densite introuvable par pkg-config. Si elle est installée hors des emplacements standard, indique où se trouve densite.pc avec PKG_CONFIG_PATH."
+fi
+DENSITE_CFLAGS=$(pkg-config --cflags densite)
+DENSITE_LIBS=$(pkg-config --libs densite)
+resultat "yes ($(pkg-config --modversion densite))"
+
+verifie "for zlib.h"
+printf '#include <zlib.h>\nint main(void) { return zlibVersion() == 0; }\n' > conftest.c
+# shellcheck disable=SC2086
+essaie $CC $CFLAGS $CPPFLAGS -c conftest.c -o conftest.o \
+  || echec "zlib.h introuvable : installe le paquet de développement de zlib (ou indique son répertoire avec CPPFLAGS=-I…)"
+resultat yes
+
+verifie "for gzopen in -lz"
+printf '#include <zlib.h>\nint main(void) { return gzopen("x", "r") == 0; }\n' > conftest.c
+# shellcheck disable=SC2086
+essaie $CC $CFLAGS $CPPFLAGS $LDFLAGS conftest.c -o conftest -lz || echec "impossible de lier avec -lz"
+resultat yes
+
+verifie "whether a program can be linked with densite"
+printf '#include <densite.h>\nint main(void) { return densite_version() == 0; }\n' > conftest.c
+# shellcheck disable=SC2086
+essaie $CC $CFLAGS $CPPFLAGS $DENSITE_CFLAGS $LDFLAGS conftest.c -o conftest $DENSITE_LIBS \
+  || echec "impossible de lier un programme avec densite (voir config.log)"
+resultat yes
+rm -f conftest conftest.c conftest.o
+
+echo "config.status: creating Makefile"
+sed -e "s|@prefix@|$prefix|g" \
+    -e "s|@CC@|$CC|g" \
+    -e "s|@CFLAGS@|$CFLAGS|g" \
+    -e "s|@CPPFLAGS@|$CPPFLAGS $DENSITE_CFLAGS|g" \
+    -e "s|@LDFLAGS@|$LDFLAGS|g" \
+    -e "s|@LIBS@|$DENSITE_LIBS -lz|g" \
+    Makefile.in > Makefile
+echo "configure: Makefile créé (prefix=$prefix)" >&5
+echo
+echo "jaugeur sera installé dans $prefix/bin. Étapes suivantes : make, make check, make install."

@@ -1,0 +1,6 @@
+#!/bin/bash
+# etat-cuves : état des cuves de fermentation de la brasserie (données de démonstration).
+printf '%-8s %-14s %6s  %s\n' CUVE BIÈRE TEMP ÉTAT
+printf '%-8s %-14s %6s  %s\n' cuve-1 "IPA du Noyau" 19.5 "fermentation (jour 4)"
+printf '%-8s %-14s %6s  %s\n' cuve-2 "Blanche Init" 18.0 "garde (jour 12)"
+printf '%-8s %-14s %6s  %s\n' cuve-3 "Stout Kernel" 4.0 "prête à embouteiller"

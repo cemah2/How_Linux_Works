@@ -33,6 +33,7 @@ jobs:
           labs/lab05-comptes/fichiers/ecrit-commandes labs/lab05-comptes/fichiers/synchro-perso
           labs/lab06-performances/fichiers/calcul-stocks labs/lab06-performances/fichiers/sauvegarde-nuit
           labs/lab06-performances/fichiers/journal-capteurs
+          labs/lab09-scripts/fichiers/etat-cuves labs/lab11-compilation/fichiers/jaugeur-2.1/configure
 
   lab01:
     name: Lab 01 de bout en bout
@@ -100,6 +101,14 @@ jobs:
       - name: Trois rôles sur la même machine
         run: sudo bash tools/tester-lab08.sh
 
+  lab09:
+    name: Lab 09 de bout en bout (script, timer, fichiers de démarrage)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Setup, correction, solution, correction, reset
+        run: sudo bash tools/tester-lab09.sh
+
   lab10:
     name: Lab 10 (NFS, Samba, SSHFS, rsync sur une seule machine)
     runs-on: ubuntu-latest
@@ -107,3 +116,21 @@ jobs:
       - uses: actions/checkout@v5
       - name: cuve, comptoir et douane sur la même machine
         run: sudo bash tools/tester-lab10.sh
+
+  lab11:
+    name: Lab 11 de bout en bout (compilation, bibliothèques, correctif)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Setup, correction, solution, correction, reset
+        run: sudo bash tools/tester-lab11.sh
+
+  lab12:
+    name: Lab 12 de bout en bout (Podman, Quadlet, mini-conteneur)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Versions
+        run: podman --version && unshare --version && systemctl --version | head -1
+      - name: Setup, correction, solution, correction, reset
+        run: sudo bash tools/tester-lab12.sh

@@ -1,0 +1,3 @@
+cuve-1           5.78 % vol.  atténuation  78.6 %
+cuve-2           4.99 % vol.  atténuation  79.2 %
+cuve-3           7.09 % vol.  atténuation  75.0 %

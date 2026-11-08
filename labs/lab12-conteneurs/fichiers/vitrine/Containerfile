@@ -1,0 +1,6 @@
+# Containerfile de la vitrine (brouillon de Malik : « ça marche chez moi »)
+FROM python:latest
+WORKDIR /app
+COPY vitrine.py /app/vitrine.py
+EXPOSE 8000
+CMD ["python3", "/app/vitrine.py"]

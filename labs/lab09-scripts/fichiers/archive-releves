@@ -1,0 +1,12 @@
+#!/bin/bash
+# archive-releves : archive les vieux relevés des cuves.
+# Écrit « vite fait » par Bastien. Usage : archive-releves SOURCE DESTINATION
+SOURCE=$1
+DEST=$2
+cd $SOURCE
+for f in $(find . -name "*.csv" -mtime +7); do
+  echo $f >> /tmp/archive-releves.liste
+done
+tar czf $DEST/releves-$(date +%Y%m%d).tar.gz $(cat /tmp/archive-releves.liste)
+rm $(cat /tmp/archive-releves.liste)
+echo "archivage terminé"
