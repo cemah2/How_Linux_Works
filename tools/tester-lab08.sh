@@ -67,6 +67,10 @@ dig +time=1 +tries=1 @192.168.50.1 cuve.brasserie.lan >/dev/null 2>&1 || true
 wait
 # ---------------------------------------------------------------------------
 
+# Diagnostic (utile si la CI échoue)
+runuser -u bastien -- ssh -v -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=5 cuve true 2>&1 | tail -15 || true
+journalctl -u ssh -n 15 --no-pager || true
+
 echo "=== cuve ===";     role cuve "$LAB" check 08
 echo "=== comptoir ==="; role comptoir "$LAB" check 08
 echo "=== douane ===";   role douane "$LAB" check 08

@@ -35,6 +35,8 @@ role cuve "$LAB" start 10
 role comptoir "$LAB" start 10
 role douane "$LAB" start 10
 if role cuve "$LAB" check 10; then echo "ÉCHEC DU TEST : cuve ne devrait pas être validée" >&2; exit 1; fi
+export PS4='+ ligne ${LINENO} : '
+set -x
 
 # --- cuve : NFS -------------------------------------------------------------------
 mkdir -p /etc/exports.d
@@ -111,6 +113,7 @@ FIN
 systemctl daemon-reload
 systemctl enable --now sauvegarde-recettes.timer
 systemctl start sauvegarde-recettes.service
+set +x
 # ---------------------------------------------------------------------------
 
 echo "=== cuve ===";     role cuve "$LAB" check 10

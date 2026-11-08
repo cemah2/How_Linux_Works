@@ -7,6 +7,7 @@ machines virtuelles de la Brasserie du Noyau à partir des images cloud officiel
 |---|---|
 | `creer-modeles.sh` | télécharge Debian 13 et Rocky Linux 10 (images cloud), vérifie les sommes de contrôle, crée deux modèles cloud-init |
 | `deployer.sh base` | clone les modèles en `cuve` (Debian) et `fut` (Rocky), injecte ton utilisateur, ta clé SSH, les paquets, le dépôt et la commande `lab` |
+| `deployer.sh reseau` | crée le pont isolé, `douane` (routeur à deux cartes) et `comptoir` (poste du réseau interne), et ajoute une carte interne à `cuve` (Labs 07, 08, 10) |
 | `instantane.sh` | `creer`, `restaurer`, `liste`, `supprimer` des instantanés sur **toutes** les VM du labo |
 | `ajouter-disques.sh` | ajoute à chaud des disques vierges à une VM (Lab 02) ; `--retirer` les détruit |
 | `detruire.sh` | supprime les VM du labo (`--modeles` : les modèles aussi) |
@@ -57,8 +58,39 @@ supprime-les depuis l’interface.
 Par défaut les VM sont sur `vmbr0` en DHCP, comme n’importe quelle machine de ton réseau local. Pour des adresses fixes :
 `MODE_IP="statique"` et les variables `IP_*`, `PASSERELLE`, `DNS`.
 
-Les labs réseau (à partir du Lab 07) utiliseront en plus un **pont isolé** (`PONT_LAB`) sans carte physique, sur lequel
-`douane` jouera le rôle de routeur. Il sera créé le moment venu, avec ses instructions.
+### Le scénario « reseau » (Labs 07, 08 et 10)
+
+```
+# ./deployer.sh reseau
+# ./instantane.sh creer avant-lab07
+```
+
+```
+            ton réseau (vmbr0, Internet)
+        ┌──────────┬──────────────┐
+      eth0       eth0           eth0
+     [cuve]    [douane]         [fut]
+      ens19      eth1
+        │          │                      pont isolé PONT_LAB (vmbr9 par défaut) :
+        └──────────┴──────── eth0 ──      aucune carte physique, rien ne sort
+                          [comptoir]      sauf à travers douane
+```
+
+Ce que fait le script :
+
+1. crée le pont `PONT_LAB` s’il n’existe pas (`pvesh create /nodes/…/network --type bridge`, sans port physique) ;
+2. clone **douane** (Debian) avec une seconde carte sur le pont, laissée sans adresse (c’est le Lab 07) ;
+3. clone **comptoir** (Rocky) **sur ton réseau** le temps que cloud-init installe ses paquets (snippet
+   `hlw-comptoir.yaml`), puis passe son profil réseau en DHCP, désactive cloud-init, le bascule sur le pont et le
+   redémarre : il n’aura d’adresse que quand douane fera DHCP ;
+4. ajoute une seconde carte à **cuve** sur le pont, après avoir désactivé cloud-init dans cuve (sinon, au démarrage
+   suivant, cloud-init la traiterait comme une nouvelle machine : nouvelles clés d’hôte SSH, cartes renommées).
+
+Noms des cartes : cloud-init renomme les cartes décrites par Proxmox en `eth0`, `eth1`… La carte ajoutée après coup
+à cuve garde le nom choisi par le noyau (souvent `ens19`). Vérifie toujours avec `ip -br link`.
+
+Pour supprimer le pont plus tard : retire les cartes des VM qui l’utilisent, puis
+`pvesh delete /nodes/$(hostname)/network/vmbr9 && pvesh set /nodes/$(hostname)/network`.
 
 ## Dépannage
 
@@ -71,6 +103,7 @@ Les labs réseau (à partir du Lab 07) utiliseront en plus un **pont isolé** (`
 | Le dépôt n’est pas dans la VM | dépôt privé ou pas d’Internet au premier démarrage | voir `lab hint 00 3` |
 | `somme de contrôle incorrecte` | téléchargement interrompu | relance le script (le fichier fautif a été supprimé) |
 | `lab start 02` : « il faut deux disques vierges » | disques pas encore ajoutés | `./ajouter-disques.sh cuve`, puis `lsblk` dans la VM |
+| `deployer.sh reseau` : comptoir reste sur vmbr0 | préparation pas finie en 10 minutes | regarde sa console (`cloud-init status`), puis relance le script |
 | Lab 03 : « Cannot open access to console, the root account is locked » | pas de mot de passe root avant la panne | restaure l’instantané `avant-lab03`, `sudo passwd root`, puis `lab panne 03` |
 
 ## Sans Proxmox ?

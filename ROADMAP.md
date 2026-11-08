@@ -23,14 +23,15 @@ Livraison par blocs, chacun validé avant de passer au suivant.
 - [x] Examen blanc du bloc 2 (généré à partir des exercices des chapitres 3 à 8)
 - [x] `infra/proxmox/ajouter-disques.sh`, sous-commande `lab panne`, tests de bout en bout des labs dans la CI
 
-## Livraison 3 : réseau (chapitres 9, 10, 12)
+## Livraison 3 : réseau (chapitres 9, 10, 12) ✅
 
-- [ ] Ch. 9 : couches, IPv4/IPv6, sous-réseaux, routes, ip, DNS, NetworkManager, TCP/UDP, DHCP, routage, NAT, pare-feu, ARP/NDP, Wi-Fi
-- [ ] Ch. 10 : services, sshd, fail2ban, ss/lsof, tcpdump, netcat, balayage de ports, sockets
-- [ ] Ch. 12 : rsync, Samba, SSHFS, NFS
-- [ ] Scénario Proxmox `reseau` : pont isolé, `douane` (routeur/pare-feu) et `comptoir` (poste client)
-- [ ] Labs 07 (réseau), 08 (SSH sécurisé), 10 (sauvegardes et partages)
-- [ ] Examen blanc du bloc 3
+- [x] Ch. 9 : couches, IPv4/IPv6, sous-réseaux, routes, ip, DNS, NetworkManager, TCP/UDP, DHCP, routage, NAT, pare-feu, ARP/NDP, Wi-Fi
+- [x] Ch. 10 : services, sshd, fail2ban, ss/lsof, tcpdump, netcat, balayage de ports, sockets
+- [x] Ch. 12 : rsync, Samba, SSHFS, NFS
+- [x] Scénario Proxmox `reseau` : pont isolé, `douane` (routeur/pare-feu) et `comptoir` (poste client)
+- [x] Labs 07 (réseau), 08 (SSH sécurisé), 10 (sauvegardes et partages)
+- [x] Examen blanc du bloc 3
+- [x] Tests CI des labs réseau : trois machines simulées (espaces de noms réseau, interfaces factices)
 
 ## Livraison 4 : environnement et outils (chapitres 11, 13 à 17)
 

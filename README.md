@@ -47,7 +47,10 @@ Puis, dans une VM : `lab list`, `lab start 01`, `lab check 01`, `lab hint 01 2`.
 | Chapitres 3 à 8 : le système de l’intérieur | 48 fiches, 269 exercices, examen blanc du bloc 2 | ✅ |
 | Infrastructure Proxmox + outil `lab` | modèles, déploiement, instantanés, disques supplémentaires | ✅ |
 | Labs 00 à 06 | mise en place, permissions, disques/LVM, démarrage, systemd, comptes/PAM, performances | ✅ |
-| Chapitres 9 à 17, modules A1 à A8, labs 07 à 13 | | voir [ROADMAP.md](ROADMAP.md) |
+| Chapitres 9, 10 et 12 : réseau | 27 fiches, 150 exercices, examen blanc du bloc 3 | ✅ |
+| Scénario Proxmox « reseau » | pont isolé, douane (routeur), comptoir (poste) | ✅ |
+| Labs 07, 08 et 10 | routeur/NAT/pare-feu, SSH durci, partages et sauvegardes | ✅ |
+| Chapitres 11, 13 à 17, modules A1 à A8, labs 09, 11 à 13 | | voir [ROADMAP.md](ROADMAP.md) |
 
 ## Organisation du dépôt
 

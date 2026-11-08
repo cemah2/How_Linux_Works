@@ -23,10 +23,10 @@ tu es l’administrateur ou l’administratrice système de la **Brasserie du No
 | [04](lab04-services/) | Des services dignes de ce nom | 6, 7 | disponible |
 | [05](lab05-comptes/) | Arrivées, départ et journaux | 7 | disponible |
 | [06](lab06-performances/) | Le serveur qui rame | 8 | disponible |
-| 07 | Le réseau de la brasserie | 9 | à venir |
-| 08 | Accès distants sécurisés | 10 | à venir |
+| [07](lab07-reseau/) | Le réseau de la brasserie | 9 | disponible |
+| [08](lab08-ssh/) | Accès distants sécurisés | 10 | disponible |
 | 09 | Scripts d’exploitation | 11, 13 | à venir |
-| 10 | Sauvegardes et partages | 12 | à venir |
+| [10](lab10-partages/) | Sauvegardes et partages | 12 | disponible |
 | 11 | Compiler et installer depuis les sources | 15, 16 | à venir |
 | 12 | Conteneurs sous le capot | 17, A4 | à venir |
 | 13 | Incident en production (final) | tous | à venir |
@@ -55,5 +55,8 @@ Quelques règles apprises à la dure :
 - Un démon de lab qu’on veut retrouver par son nom (`pgrep -x`, `pkill -x`) commence par `#!/bin/bash` ou
   `#!/usr/bin/python3`, jamais par `#!/usr/bin/env …` : sinon le processus s’appelle `bash` ou `python3`.
 - Jamais de `pkill -f motif` dans un reset : il tue aussi le shell de l’étudiant si sa ligne de commande contient le motif.
+- Les labs à plusieurs machines (07, 08, 10) ont **un correcteur par rôle** : la machine se reconnaît à son nom
+  (`douane`, `cuve`, `comptoir`), qu’une variable `LABNN_ROLE` peut forcer pour les tests. La CI les rejoue sur une
+  seule machine, avec des espaces de noms réseau ou des interfaces factices.
 - Les comptes partagés entre labs (bastien, malik, ines, chloe) se créent avec `assurer_compte`, qui note ce qu’il crée :
   le reset d’un lab ne supprime que ce que ce lab a créé.
