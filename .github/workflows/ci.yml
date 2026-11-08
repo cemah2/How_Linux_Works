@@ -83,3 +83,11 @@ jobs:
       - uses: actions/checkout@v5
       - name: Setup, correction, diagnostic, correction, reset
         run: sudo bash tools/tester-lab06.sh
+
+  lab07:
+    name: Lab 07 (trois machines simulées par des espaces de noms réseau)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: douane (la machine de test), comptoir et cuve (espaces de noms)
+        run: sudo bash tools/tester-lab07.sh

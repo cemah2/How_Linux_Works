@@ -15,13 +15,16 @@ REPERTOIRE_IMAGES="/var/lib/vz/template/hlw"
 # --- Réseau -------------------------------------------------------------
 # Pont relié à ton réseau local (accès Internet pour les VM)
 PONT="vmbr0"
-# Pont isolé pour les labs réseau (Lab 07 et suivants). Laisse vide pour l'instant.
-PONT_LAB=""
+# Pont isolé pour les labs réseau (Labs 07, 08, 10) : « deployer.sh reseau » le crée s'il n'existe pas.
+# Aucune carte physique n'y est reliée : c'est le réseau interne de la brasserie (192.168.50.0/24).
+PONT_LAB="vmbr9"
 # Adressage : "dhcp" ou une adresse fixe par VM (voir IP_CUVE, IP_FUT…)
 MODE_IP="dhcp"
 # Si MODE_IP="statique" :
 IP_CUVE="192.168.1.211/24"
 IP_FUT="192.168.1.212/24"
+IP_DOUANE="192.168.1.213/24"     # carte externe de douane (la carte interne se configure au Lab 07)
+IP_COMPTOIR="192.168.1.214/24"   # adresse temporaire de comptoir, le temps d'installer ses paquets
 PASSERELLE="192.168.1.1"
 DNS="192.168.1.1"
 

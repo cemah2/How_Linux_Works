@@ -1,0 +1,34 @@
+#cloud-config
+# Données « vendor » cloud-init de comptoir (Rocky Linux 10), le poste du réseau interne.
+# Il est préparé sur ton réseau habituel, puis deployer.sh le bascule sur le pont isolé :
+# tout ce dont il aura besoin doit donc être installé dès maintenant.
+timezone: @FUSEAU@
+package_update: true
+packages:
+  - qemu-guest-agent
+  - git
+  - vim-enhanced
+  - man-db
+  - man-pages
+  - bash-completion
+  - less
+  - curl
+  - tar
+  - rsync
+  - tcpdump
+  - bind-utils
+  - nmap-ncat
+  - nmap
+  - nfs-utils
+  - cifs-utils
+  - samba-client
+  - strace
+  - lsof
+  - epel-release
+runcmd:
+  - [systemctl, enable, --now, qemu-guest-agent]
+  - [dnf, install, -y, fuse-sshfs]
+  - [git, clone, --depth, "1", --branch, "@BRANCHE@", "@DEPOT@", /opt/how-linux-works]
+  - [ln, -sf, /opt/how-linux-works/infra/bin/lab, /usr/local/bin/lab]
+  - [mandb, -q]
+final_message: "Labo How Linux Works : comptoir prêt après $UPTIME s."

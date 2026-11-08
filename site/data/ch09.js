@@ -452,7 +452,8 @@ HLW.chapitre({
         - \`UP\` : interface activée par l’administrateur ; \`LOWER_UP\` : lien physique présent (câble branché).
         - \`mtu 1500\` : taille maximale d’un paquet sur ce lien.
         - Noms : \`lo\` (bouclage), \`ens18\`, \`enp0s31f6\` (noms **prévisibles**, d’après l’emplacement matériel),
-          \`eth0\` (ancien style, encore utilisé par Rocky en cloud), \`wlp1s0\` (Wi-Fi). \`ip link show\` les liste.
+          \`eth0\` (ancien style ; c’est aussi le nom que cloud-init donne aux cartes de tes VM Proxmox), \`wlp1s0\`
+          (Wi-Fi). \`ip link show\` les liste.
       `,
       aRetenir: [
         '`ping -c N` ; pas de réponse ≠ machine éteinte (ICMP filtré).',
@@ -519,8 +520,8 @@ HLW.chapitre({
           id: 'c09-05-06', type: 'terminal', niveau: 1,
           enonce: 'Sur cuve et sur fut, lance `ip -br link` puis `ip -br address`. Colle une sortie. Comment s’appelle l’interface principale sur chaque machine ?',
           attendu: ['UP'],
-          indices: ['`-br` (*brief*) donne une ligne par interface.', 'Debian nomme les interfaces selon leur emplacement.', 'Rocky en cloud utilise encore eth0.'],
-          solution: 'Sur cuve (Debian), l’interface s’appelle en général **ens18** ; sur fut (Rocky, image cloud avec `net.ifnames=0`), **eth0**. Les deux ont aussi `lo` (127.0.0.1).',
+          indices: ['`-br` (*brief*) donne une ligne par interface.', 'Regarde la configuration réseau générée au premier démarrage.', 'cloud-init applique les noms fournis par Proxmox.'],
+          solution: 'Sur les deux VM, l’interface s’appelle **eth0** : Proxmox décrit la carte sous ce nom dans la configuration cloud-init, et cloud-init la renomme au démarrage (`set-name` dans Netplan sur cuve). Sans cloud-init, Debian utiliserait un nom prévisible comme **ens18**. Les deux ont aussi `lo` (127.0.0.1).',
         },
       ],
     },
@@ -746,7 +747,7 @@ HLW.chapitre({
           enonce: 'Sur cuve, affiche `cat /etc/netplan/*.yaml` et `networkctl` ; sur fut, `nmcli device` et `ls /etc/NetworkManager/system-connections/`. Colle une sortie. Qui a écrit ces fichiers ?',
           attendu: ['ethernets|nmconnection|routable|connected'],
           indices: ['Regarde les commentaires en tête des fichiers.', 'Tes VM ont été configurées au premier démarrage.', 'Par cloud-init.'],
-          solution: 'Les deux configurations ont été écrites par **cloud-init** au premier démarrage : `50-cloud-init.yaml` sur cuve (DHCP sur ens18), `cloud-init-eth0.nmconnection` sur fut. `networkctl` montre ens18 *routable / configured*.',
+          solution: 'Les deux configurations ont été écrites par **cloud-init** au premier démarrage : `50-cloud-init.yaml` sur cuve (DHCP sur eth0, avec `match: macaddress` et `set-name: eth0`), `cloud-init-eth0.nmconnection` sur fut. `networkctl` montre eth0 *routable / configured*.',
         },
       ],
     },

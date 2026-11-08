@@ -21,6 +21,12 @@ packages:
   - strace
   - lsof
   - tree
+  - rsync
+  - tcpdump
+  - bind9-dnsutils
+  - netcat-openbsd
+  - nftables
+  - nmap
 runcmd:
   - [systemctl, enable, --now, qemu-guest-agent]
   - [git, clone, --depth, "1", --branch, "@BRANCHE@", "@DEPOT@", /opt/how-linux-works]
