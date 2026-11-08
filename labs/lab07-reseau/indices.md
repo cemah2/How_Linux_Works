@@ -22,7 +22,8 @@
 2. `net.ipv4.ip_forward = 1` dans un fichier de `/etc/sysctl.d/`, puis `sysctl --system`.
 3. Options utiles : `interface=`, `bind-interfaces`, `dhcp-range=`, `dhcp-option=option:router,…`, `domain=`,
    `local=/brasserie.lan/`. Si dnsmasq refuse de démarrer : `journalctl -u dnsmasq`… quelqu’un écoute déjà sur
-   le port 53 (`ss -ulnp`), qui est-ce ?
+   le port 53 (`ss -ulnp`), qui est-ce ? Si les noms extérieurs répondent `REFUSED` : dnsmasq n’a pas de serveur
+   amont ; regarde les options `no-resolv` et `server=`.
 4. `dhcp-host=MAC,comptoir,192.168.50.100`.
 5. `host-record=cuve.brasserie.lan,cuve,192.168.50.10` (et de même pour douane). Le comptoir prend son nom de
    sa réservation, avec le domaine de `domain=`.
@@ -52,6 +53,8 @@
    bind-interfaces
    domain=brasserie.lan
    local=/brasserie.lan/
+   no-resolv
+   server=127.0.0.53
    dhcp-range=192.168.50.120,192.168.50.150,12h
    dhcp-option=option:router,192.168.50.1
    dhcp-option=option:dns-server,192.168.50.1

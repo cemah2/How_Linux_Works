@@ -64,7 +64,7 @@ machines soient au vert.
 - Diagnostique couche par couche : lien (`ip link`), adresse (`ip a`), route (`ip r`), voisin (`ip neigh`),
   nom (`getent hosts`, `dig`), service (`ss -ulnp`), pare-feu (`nft list ruleset`), et `tcpdump` quand rien
   ne va plus.
-- Il y a au moins **quatre pièges**. Les messages de `lab check` et les journaux te mettront sur la voie.
+- Il y a au moins **cinq pièges**. Les messages de `lab check` et les journaux te mettront sur la voie.
 - Pour finir : redémarre les trois machines et relance `lab check 07` partout.
 
 ## Coincé ?

@@ -50,6 +50,10 @@ bind-interfaces
 domain=brasserie.lan
 local=/brasserie.lan/
 
+# Serveur amont : le résolveur local de douane (systemd-resolved)
+no-resolv
+server=127.0.0.53
+
 # DHCP
 dhcp-range=192.168.50.120,192.168.50.150,12h
 dhcp-option=option:router,192.168.50.1
@@ -73,6 +77,11 @@ $ dig +short @192.168.50.1 deb.debian.org          # relayé vers les serveurs d
 `failed to create listening socket for port 53: Address already in use`. Le coupable, `ss -ulnp sport = :53` :
 systemd-resolved, sur 127.0.0.53. Avec `bind-interfaces`, dnsmasq n’écoute que sur les adresses de eth1 (et de lo),
 et les deux cohabitent. Bonus : il ne répond plus du côté externe.
+
+**Piège 2** : les noms internes répondent, mais `dig @192.168.50.1 deb.debian.org` renvoie `status: REFUSED`.
+dnsmasq n’a **aucun serveur amont** : sur Debian, son script de démarrage cherche ses serveurs via `resolvconf`,
+et avec systemd-resolved cette liste reste vide (`journalctl -u dnsmasq` le laisse deviner). `no-resolv` lui dit
+d’ignorer `resolv.conf`, et `server=127.0.0.53` de relayer vers systemd-resolved, qui connaît les vrais serveurs.
 
 La réservation (`dhcp-host`) peut être hors de la plage `dhcp-range` : il suffit qu’elle soit dans le même réseau.
 
@@ -126,10 +135,10 @@ $ sudo systemctl restart nftables                 # recharge le fichier
 $ sudo nft list ruleset
 ```
 
-**Piège 2** : oublier DNS et DHCP en entrée depuis eth1. Tout marche… jusqu’à ce que la politique passe à `drop` :
+**Piège 3** : oublier DNS et DHCP en entrée depuis eth1. Tout marche… jusqu’à ce que la politique passe à `drop` :
 le comptoir n’obtient plus d’adresse, et plus aucun nom ne se résout.
 
-**Piège 3** : sans `ct state established,related accept` dans forward, les requêtes du comptoir sortent mais les
+**Piège 4** : sans `ct state established,related accept` dans forward, les requêtes du comptoir sortent mais les
 réponses ne reviennent pas.
 
 ## 8. comptoir
@@ -183,7 +192,7 @@ $ getent hosts comptoir.brasserie.lan
 $ getent hosts deb.debian.org          # toujours résolu par les serveurs de eth0
 ```
 
-**Piège 4** : ajouter `routes: [{to: default, via: 192.168.50.1}]` (ou `gateway4`) sur ens19. cuve aurait deux
+**Piège 5** : ajouter `routes: [{to: default, via: 192.168.50.1}]` (ou `gateway4`) sur ens19. cuve aurait deux
 routes par défaut, et sa sortie deviendrait imprévisible. Une interface secondaire n’a pas besoin de passerelle :
 le réseau 192.168.50.0/24 est directement connecté.
 

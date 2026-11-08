@@ -91,3 +91,11 @@ jobs:
       - uses: actions/checkout@v5
       - name: douane (la machine de test), comptoir et cuve (espaces de noms)
         run: sudo bash tools/tester-lab07.sh
+
+  lab08:
+    name: Lab 08 (cuve, comptoir et douane joués tour à tour)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Trois rôles sur la même machine
+        run: sudo bash tools/tester-lab08.sh

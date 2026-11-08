@@ -70,6 +70,8 @@ interface=brlan
 bind-interfaces
 domain=brasserie.lan
 local=/brasserie.lan/
+no-resolv
+server=127.0.0.53
 dhcp-range=192.168.50.120,192.168.50.150,12h
 dhcp-option=option:router,192.168.50.1
 dhcp-option=option:dns-server,192.168.50.1
