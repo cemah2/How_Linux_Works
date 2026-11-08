@@ -9,7 +9,7 @@ HLW.catalogue({
   depot: 'https://github.com/cemah2/How_Linux_Works',
   accroche: 'Un cahier d’exercices en français construit sur *How Linux Works* de Brian Ward (3ᵉ édition, No Starch Press, 2021). Chaque fiche suit une section du livre : un rappel, des exercices corrigés automatiquement, trois niveaux d’indices, puis des labs sur de vraies machines virtuelles.',
 
-  fichiers: ['glossaire.js', 'glossaire-systeme.js', 'glossaire-reseau.js', 'glossaire-outils.js', 'ch00.js', 'ch01.js', 'ch02.js', 'ch02-suite.js', 'ch03.js', 'ch04.js', 'ch04-suite.js', 'ch05.js', 'ch06.js', 'ch07.js', 'ch08.js', 'ch09.js', 'ch09-suite.js', 'ch10.js', 'ch11.js', 'ch12.js', 'ch13.js', 'ch14.js', 'ch15.js', 'ch16.js', 'ch17.js'],
+  fichiers: ['glossaire.js', 'glossaire-systeme.js', 'glossaire-reseau.js', 'glossaire-outils.js', 'glossaire-plus.js', 'ch00.js', 'ch01.js', 'ch02.js', 'ch02-suite.js', 'ch03.js', 'ch04.js', 'ch04-suite.js', 'ch05.js', 'ch06.js', 'ch07.js', 'ch08.js', 'ch09.js', 'ch09-suite.js', 'ch10.js', 'ch11.js', 'ch12.js', 'ch13.js', 'ch14.js', 'ch15.js', 'ch16.js', 'ch17.js', 'a1.js', 'a2.js', 'a3.js', 'a4.js'],
 
   blocs: [
     { id: 'socle', nom: 'Mise en place', couleur: 'socle', desc: 'Ton labo, tes outils, tes premiers réflexes.', chapitres: ['00'] },
