@@ -30,6 +30,7 @@ jobs:
           labs/lab01-premier-jour/fichiers/thermostat-cuve labs/lab01-premier-jour/fichiers/sauvegarde-recettes
           labs/lab03-demarrage/fichiers/brassd labs/lab03-demarrage/fichiers/collecte-capteurs
           labs/lab04-services/fichiers/vitrine labs/lab04-services/fichiers/inventaire labs/lab04-services/fichiers/export-ventes
+          labs/lab05-comptes/fichiers/ecrit-commandes labs/lab05-comptes/fichiers/synchro-perso
 
   lab01:
     name: Lab 01 de bout en bout
@@ -64,3 +65,11 @@ jobs:
       - uses: actions/checkout@v5
       - name: Setup, correction, solution, correction, reset
         run: sudo bash tools/tester-lab04.sh
+
+  lab05:
+    name: Lab 05 de bout en bout
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Setup, correction, solution, correction, reset
+        run: sudo bash tools/tester-lab05.sh
