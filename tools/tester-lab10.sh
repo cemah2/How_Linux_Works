@@ -74,7 +74,10 @@ runuser -u bastien -- touch /mnt/commun/bonjour-de-bastien.txt
 # --- comptoir : SSHFS pour Bastien (clé « du Lab 08 ») -------------------------------
 H="$(getent passwd bastien | cut -d: -f6)"
 install -d -m 700 -o bastien -g bastien "$H/.ssh"
+install -d -m 700 -o bastien -g bastien "$H/.ssh"
 runuser -u bastien -- ssh-keygen -q -t ed25519 -N '' -f "$H/.ssh/id_ed25519"
+chmod 600 "$H/.ssh/id_ed25519"
+ls -la "$H/.ssh"
 install -m 600 -o bastien -g bastien "$H/.ssh/id_ed25519.pub" "$H/.ssh/authorized_keys"
 printf 'Host cuve\n    HostName 192.168.50.10\n    User bastien\n    StrictHostKeyChecking accept-new\n' > "$H/.ssh/config"
 chown bastien:bastien "$H/.ssh/config"

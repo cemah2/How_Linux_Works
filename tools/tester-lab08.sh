@@ -48,7 +48,10 @@ systemctl restart ssh
 systemctl disable --now outil-debug.service
 # --- Solution : comptoir (même machine, donc même compte bastien) ------------------
 H="$(getent passwd bastien | cut -d: -f6)"
+install -d -m 700 -o bastien -g bastien "$H/.ssh"
 runuser -u bastien -- ssh-keygen -q -t ed25519 -N '' -C bastien@comptoir -f "$H/.ssh/id_ed25519"
+chmod 600 "$H/.ssh/id_ed25519"
+ls -la "$H/.ssh"
 install -m 600 -o bastien -g bastien "$H/.ssh/id_ed25519.pub" "$H/.ssh/authorized_keys"
 chmod 700 "$H/.ssh"
 printf 'Host cuve\n    HostName 192.168.50.10\n    User bastien\n' > "$H/.ssh/config"
