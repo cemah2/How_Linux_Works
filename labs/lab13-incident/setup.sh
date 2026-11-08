@@ -42,6 +42,7 @@ WantedBy=multi-user.target
 EOF
 systemctl daemon-reload
 systemctl enable --now srv-boutique-donnees.mount >/dev/null 2>&1
+chown boutique:boutique /srv/boutique/donnees     # racine du système de fichiers monté
 install -d -m 755 -o boutique -g boutique /srv/boutique/donnees/journal
 install -m 644 -o boutique -g boutique /dev/null /srv/boutique/donnees/commandes.log
 printf '2026-11-06 18:02:11 IPA du Noyau x6\n2026-11-06 19:40:57 Stout Kernel x2\n' > /srv/boutique/donnees/commandes.log
