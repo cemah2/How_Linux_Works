@@ -43,7 +43,7 @@ HLW.chapitre({
 
         ### Inspecter avant de déballer
 
-        Les sources arrivent en \`.tar.gz\`, \`.tar.bz2\` ou \`.tar.xz\` (fiche 2.18). On **liste** d’abord :
+        Les sources arrivent en \`.tar.gz\`, \`.tar.bz2\` ou \`.tar.xz\` (fiche 2.13). On **liste** d’abord :
 
         \`\`\`
         $ tar tvf jaugeur-1.4.tar.gz | head        # tout doit être sous jaugeur-1.4/

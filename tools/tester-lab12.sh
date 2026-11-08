@@ -81,11 +81,12 @@ RACINE=/srv/mini/rootfs
 [[ $# -ge 1 ]] || { echo "usage : mini-conteneur COMMANDE [ARGUMENTS…]" >&2; exit 2; }
 [[ -d $RACINE ]] || { echo "mini-conteneur : $RACINE introuvable" >&2; exit 1; }
 
-# systemd-run --scope : place la commande dans un cgroup temporaire avec MemoryMax.
+# systemd-run --scope : place la commande dans un cgroup temporaire avec MemoryMax ;
+#   --expand-environment=no : sinon systemd-run remplace lui-même les $VARIABLES (et $$) des arguments.
 # unshare : nouveaux espaces de noms ; --fork pour que la commande soit le PID 1 du nouvel espace PID ;
 #           --root fait le chroot ; --mount-proc remonte /proc pour que ps et $$ voient le nouvel espace.
 # sh -c : fixe le nom d'hôte dans le nouvel espace UTS, puis se remplace par la commande demandée.
-exec systemd-run --quiet --scope -p MemoryMax=64M -- \
+exec systemd-run --quiet --scope --expand-environment=no -p MemoryMax=64M -- \
   unshare --pid --fork --mount --uts --net --ipc --root="$RACINE" --mount-proc \
   /bin/sh -c 'hostname mini && exec "$@"' mini-conteneur "$@"
 SCRIPT

@@ -54,7 +54,7 @@ HLW.chapitre({
         - **MANPATH** : en général inutile, \`man\` le déduit de PATH.
         - **Alias** : pratiques en interactif, ignorés par les scripts. Préfère une fonction ou un petit script dès que
           ça se complique.
-        - **umask** : rappel de la fiche 2.9.
+        - **umask** : rappel de la fiche 2.11.
       `,
       aRetenir: [
         'Fichier de démarrage court et compris.',

@@ -132,7 +132,7 @@ seulement_lo() {
 }
 objectif "mini-conteneur isole : PID 1, nom d’hôte « mini », racine Alpine, réseau vide"
 exiger "$MINI est absent ou non exécutable" test -x "$MINI"
-exiger "la commande lancée doit avoir le PID 1 (espace de noms PID + --fork, /proc remonté)" pid1
+exiger "la commande lancée doit avoir le PID 1 (espace PID + --fork, /proc remonté ; avec systemd-run : --expand-environment=no, sinon $$ devient $)" pid1
 exiger "le nom d’hôte vu dans le mini-conteneur doit être « mini », sans changer celui de l’hôte (espace UTS)" nom_mini
 exiger "la racine doit être $RACINE_MINI (cat /etc/os-release doit montrer Alpine)" chroot_ok
 exiger "seule l’interface lo doit exister (espace de noms réseau)" seulement_lo
